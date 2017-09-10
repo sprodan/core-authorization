@@ -22,12 +22,8 @@ namespace Authorization.Pages
 
         public async Task<IActionResult> OnGetAsync()
         {
-            if(Request.Cookies.TryGetValue("hash", out string hash))
-            {
-                Users = await _db.Users.AsNoTracking().ToListAsync();
-                return Page();
-            }
-            return RedirectToPage("/User/Login");
+            Users = await _db.Users.AsNoTracking().ToListAsync();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostDeleteAsync(int id)
