@@ -8,7 +8,7 @@ using Authorization.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace Authorization.Pages.User
+namespace Authorization.Pages.Auth
 {
     public class LoginModel : PageModel
     {

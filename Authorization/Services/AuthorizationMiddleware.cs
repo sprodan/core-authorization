@@ -20,21 +20,21 @@ namespace Authorization.Services
 
         public async Task Invoke(HttpContext context)
         {
-            if (context.Request.Path == "/User/Login")
+            if (context.Request.Path == "/Auth/Login")
             {
                 await _next.Invoke(context);
                 return;
             }
             if (!context.Request.Cookies.TryGetValue("hash", out string hash))
             {
-                context.Response.Redirect("/User/Login");
+                context.Response.Redirect("/Auth/Login");
                 return;
             }
             var db = context.RequestServices.GetService<AppDbContext>(); 
             var auth = await db.Authorizations.FirstOrDefaultAsync(x => x.Token == Guid.Parse(hash));
             if (auth == null)
             {
-                context.Response.Redirect("/User/Login");
+                context.Response.Redirect("/Auth/Login");
                 return;
             }
             await _next.Invoke(context);
