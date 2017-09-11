@@ -69,32 +69,32 @@
     </div>
 </div>
 <script>
-    $("#addRole").on("submit", function (event) {
+    var form = $("#addRole");
+    form.on("submit", function (event) {
         event.preventDefault();
-        var data;
-        data = $(this).serialize();
+        var data = form.serialize();
         var token = $('[name=__RequestVerificationToken]').val();
 
         $.ajax({
             url: "/Settings?handler=addrole",
             type: 'POST',
-            context: document.body,
-            data: { __RequestVerificationToken: token, jsonRequest: JSON.stringify(data) },
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
             success: function (response)
             {
-                var data = $.deserialize(response);
-                switch (data.Code) {
+                switch (response.code) {
                     case 200:
-                        $('#roleTable tr:last').after("<tr><td>" + data.Role.Id + "</td><td>" + data.Role.Name + "</td><td><a asp-page='/Edit' asp-route-id='" + data.Role.Id + "'>edit</a><button type='submit' asp-page-handler='delete' asp-route-id=" + data.Role.Id + "> delete </button> </td> </tr>");
-                        break;
-                    default:
-                        break;
+                        $('#addrole-form').modal('hide');
+                        $('#roleTable tr:last').after("<tr><td>" + response.role.id + "</td><td>" + response.role.name + "</td><td><a asp-page='/Edit' asp-route-id='" + response.role.id + "'>edit</a><button type='submit' asp-page-handler='delete' asp-route-id=" + response.role.id + "> delete </button> </td> </tr>");
+                    break;
+                default:
+                    break;
 
 
                 }
             }
         });
     });
-    
+
 
 </script>

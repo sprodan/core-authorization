@@ -8,6 +8,7 @@ using Authorization.Data;
 using Microsoft.EntityFrameworkCore;
 using Authorization.Extentions;
 using System.IO;
+using System.Text;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Web;
@@ -28,16 +29,22 @@ namespace Authorization.Pages.Settings
             return Page();
         }
 
-        [AjaxOnly]
+        //[AjaxOnly]
         public async Task<IActionResult> OnPostAddRoleAsync()
         {
             if(Request.Form.TryGetValue("jsonRequest", out StringValues data))
             {
-                var serializedData = JsonConvert.DeserializeObject<Dictionary<string, string>>(data);
-                if(serializedData != null)
+                var keyValuePairs = data.ToString().Split('&')
+                    .Select(value => value.Split('='))
+                    .ToDictionary(pair => pair[0], pair => pair[1]);
+
+                var name = HttpUtility.UrlDecode(keyValuePairs["name"]);
+                
+                if (!string.IsNullOrWhiteSpace(name))
                 {
-                    await _db.Roles.AddAsync(new Role() { Name = "123" });
-                    return new JsonResult(new { Status = "OK", Code = 200});
+                    var role = await _db.Roles.AddAsync(new Role() { Name = name });
+                    await _db.SaveChangesAsync();
+                    return new JsonResult(new { Status = "OK", Code = 200, Role = role.Entity});
                 }
                 return new JsonResult(data.ToString());
             }
