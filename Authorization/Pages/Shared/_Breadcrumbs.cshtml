@@ -1,0 +1,36 @@
+﻿<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@Model.Title</h2>
+        @if (Model.Breadcrumbs != null && Model.Breadcrumbs.Count > 0)
+        {
+            <ol class="breadcrumb">
+                @do
+                {
+                    var val = Model.Breadcrumbs.Dequeue();
+                    if (Model.Breadcrumbs.Count > 0)
+                    {
+
+                        <li>
+                            <a href="@val.NavigationUrl">@val.Title</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="active">
+                            <strong>@val.Title</strong>
+                        </li>
+                    }
+                } while (Model.Breadcrumbs.Count > 0);
+            </ol>
+        }
+    </div>
+    @if (Model.ActionUrl != null)
+    {
+        <div class="col-sm-8">
+            <div class="title-action">
+                <a asp-page="@Model.ActionUrl" class="btn btn-primary">@Model.ActionTitle</a>
+            </div>
+        </div>
+    }
+
+</div>

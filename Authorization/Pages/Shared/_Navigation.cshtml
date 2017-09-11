@@ -22,13 +22,14 @@
                     </ul>*@
                 </div>
                 <div class="logo-element">
-                    IN+
+                    MD
                 </div>
             </li>
-            @*<li class="@Html.IsSelected(controller: "Main")">
-                <a href="@Url.Action("Index", "Main")"><i class="fa fa-pie-chart"></i> <span class="nav-label" data-i18n="nav.dashboard">Главная</span> </a>
+
+            <li class="isSelected">
+                <a href="@Url.Page("/Settings/Index")"><i class="fa fa-pie-chart"></i> <span class="nav-label" data-i18n="nav.dashboard">Настройки</span> </a>
             </li>
-            <li class="@Html.IsSelected(controller: "HR")">
+            @*<li class="@Html.IsSelected(controller: "HR")">
                 <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label" data-i18n="nav.otherpages">HR</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse @Html.IsSelected(controller: "HR", cssClass: "in")">
                     <li class="@Html.IsSelected(action: "Recruitment")"><a href="@Url.Action("Recruitment", "HR")">Подбор</a></li>

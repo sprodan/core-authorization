@@ -1,0 +1,100 @@
+﻿@page
+@model Authorization.Pages.Settings.Index
+
+
+<div class="row animated fadeInRightBig">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="col-md-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Роли</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form method="post">
+                            <table class="table" id="roleTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Название</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var role in Model.Roles)
+                                    {
+                                        <tr>
+                                            <td>@role.Id</td>
+                                            <td>@role.Name</td>
+                                            <td>
+                                                <a asp-page="/Edit" asp-route-id="@role.Id">edit</a>
+                                                <button type="submit" asp-page-handler="delete"
+                                                        asp-route-id="@role.Id">
+                                                    delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="ibox-footer">
+                        <div class="text-center">
+                            <a data-toggle="modal" class="btn btn-primary" href="#addrole-form">Добавить роль</a>
+                        </div>
+                        <div id="addrole-form" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Добавить роль</h3>
+                                                <form role="form" id="addRole">
+                                                    <div class="form-group"><label>Название</label> <input type="text" placeholder="Название" class="form-control" name="name"></div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Добавить</strong></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#addRole").on("submit", function (event) {
+        event.preventDefault();
+        var data;
+        data = $(this).serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+
+        $.ajax({
+            url: "/Settings?handler=addrole",
+            type: 'POST',
+            context: document.body,
+            data: { __RequestVerificationToken: token, jsonRequest: JSON.stringify(data) },
+            success: function (response)
+            {
+                var data = $.deserialize(response);
+                switch (data.Code) {
+                    case 200:
+                        $('#roleTable tr:last').after("<tr><td>" + data.Role.Id + "</td><td>" + data.Role.Name + "</td><td><a asp-page='/Edit' asp-route-id='" + data.Role.Id + "'>edit</a><button type='submit' asp-page-handler='delete' asp-route-id=" + data.Role.Id + "> delete </button> </td> </tr>");
+                        break;
+                    default:
+                        break;
+
+
+                }
+            }
+        });
+    });
+    
+
+</script>

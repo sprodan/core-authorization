@@ -22,7 +22,7 @@ namespace Authorization
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                              options.UseSqlServer(Configuration.GetConnectionString("MS_TableConnectionString")));
+                              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddMvc();
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

@@ -6,23 +6,28 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Authorization.Models;
+using System.Linq;
 
 namespace Authorization.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel : BasePageModel 
     {
-        private AppDbContext _db;
-        public IndexModel(AppDbContext db)
+        public IndexModel(AppDbContext db) : base(db)
         {
-            _db = db;
+            this.Title = "Главная страница";
+            this.ActionTitle = "Тест";
+            this.ActionUrl = "/";
+            this.Breadcrumbs = new Queue<Breadcrumb>();
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "test", NavigationUrl = "/" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "test", NavigationUrl = "/" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "test", NavigationUrl = "/" });
         }
 
-        public IList<Data.User> Users { get; private set; }
-
-
+        public IList<User> Users { get; private set; }
+        
         public async Task<IActionResult> OnGetAsync()
         {
-            Users = await _db.Users.AsNoTracking().ToListAsync();
             return Page();
         }
 
@@ -35,7 +40,6 @@ namespace Authorization.Pages
                 _db.Users.Remove(user);
                 await _db.SaveChangesAsync();
             }
-
             return RedirectToPage();
         }
     }

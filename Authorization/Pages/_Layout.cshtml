@@ -30,37 +30,6 @@
     @*Html.ApplicationInsightsJavaScript(TelemetryConfiguration)*@
 </head>
 <body class="skin-3">
-     
-    <!-- Skin configuration box -->
-    @*@Html.Partial("Shared/_SkinConfig")*@
-
-    <!-- Wrapper-->
-    <div id="wrapper" >@*class="@Html.PageClass()"*@
-        
-        <!-- Navigation -->
-        @Html.Partial("Shared/_Navigation")
-
-        <!-- Page wraper -->
-        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
-
-            <!-- Top Navbar -->
-            @Html.Partial("Shared/_TopNavbar")
-
-            <!-- Main view  -->
-            @RenderBody()
-
-            <!-- Footer -->
-            @Html.Partial("Shared/_Footer")
-
-        </div>
-        <!-- End page wrapper-->
-
-        <!-- Right Sidebar -->
-        @Html.Partial("Shared/_RightSidebar")
-
-    </div>
-    <!-- End wrapper-->
-
     <environment names="Development">
         <script src="~/lib_bower/jquery/dist/jquery.js"></script>
         <script src="~/lib_bower/bootstrap/dist/js/bootstrap.js"></script>
@@ -80,6 +49,39 @@
         <script src="~/lib_bower/slimScroll/jquery.slimscroll.min.js"></script>
         <script src="~/js/script.js" asp-append-version="true"></script>
     </environment>
+    <!-- Skin configuration box -->
+    @*@Html.Partial("Shared/_SkinConfig")*@
+
+    <!-- Wrapper-->
+    <div id="wrapper" >@*class="@Html.PageClass()"*@
+        
+        <!-- Navigation -->
+        @Html.Partial("Shared/_Navigation")
+
+        <!-- Page wraper -->
+        <div id="page-wrapper" class="gray-bg @ViewBag.SpecialClass">
+
+            <!-- Top Navbar -->
+            @Html.Partial("Shared/_TopNavbar")
+
+            @Html.Partial("Shared/_Breadcrumbs")
+
+            <!-- Main view  -->
+            @RenderBody()
+
+            <!-- Footer -->
+            @Html.Partial("Shared/_Footer")
+
+        </div>
+        <!-- End page wrapper-->
+
+        <!-- Right Sidebar -->
+        @Html.Partial("Shared/_RightSidebar")
+
+    </div>
+    <!-- End wrapper-->
+
+    
 
     @RenderSection("scripts", required: false)
 </body>
