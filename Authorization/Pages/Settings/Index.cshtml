@@ -22,15 +22,16 @@
                                 <tbody>
                                     @foreach (var role in Model.Roles)
                                     {
-                                        <tr>
+                                        <tr id="@role.Id">
                                             <td>@role.Id</td>
-                                            <td>@role.Name</td>
-                                            <td>
-                                                <a asp-page="/Edit" asp-route-id="@role.Id">edit</a>
-                                                <button type="submit" asp-page-handler="delete"
-                                                        asp-route-id="@role.Id">
-                                                    delete
-                                                </button>
+                                            <td id="roleName">@role.Name</td>
+                                            <td style="width: 25%">
+											    <a class="btn btn-xs btn-danger pull-right" onclick="deleteRole(@role.Id)" style="margin-left: 2px">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+											    <a class="btn btn-xs btn-warning pull-right" onclick="editRole(@role.Id, '@role.Name')">
+                                                    <i class="fa fa-pencil"></i>
+											    </a>
                                             </td>
                                         </tr>
                                     }
@@ -61,6 +62,26 @@
                                 </div>
                             </div>
                         </div>
+						<div id="editrole-form" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Изменить роль</h3>
+                                                <form role="form" id="editForm">
+													<input type="hidden" id="idEditRoleForm" name="id"/>
+                                                    <div class="form-group"><label>Название</label> <input id="nameEditRoleForm" type="text" placeholder="Название" class="form-control" name="name" value=""></div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -69,6 +90,61 @@
     </div>
 </div>
 <script>
+    function deleteRole(id){
+        var token = $('[name=__RequestVerificationToken]').val();
+    	$.ajax({
+                url: "/Settings?handler=deleterole",
+                type: 'POST',
+                dataType: "json",
+                data: { __RequestVerificationToken: token, jsonRequest: id },
+                success: function (response)
+                {
+                    switch (response.code) {
+                        case 200:
+                            $("#roleTable tr").filter(function (){return $(this).attr("id") == id}).remove();
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            });
+     }
+
+	function editRole(id, name){
+	    $("input").filter(function() {
+	        return $(this).attr("id") == "idEditRoleForm"
+        }).val(id);
+	    $("input").filter(function() {
+            return $(this).attr("id") == "nameEditRoleForm"
+        }).val(name);
+        $('#editrole-form').modal('show');
+	}
+	
+	 var editForm = $("#editForm");
+	 editForm.on("submit", function (event){
+        event.preventDefault();
+	    var data = editForm.serialize();
+	    var token = $('[name=__RequestVerificationToken]').val();
+	    $.ajax({
+                url: "/Settings?handler=editrole",
+                type: 'POST',
+                dataType: "json",
+                data: { __RequestVerificationToken: token, jsonRequest: data},
+                success: function (response)
+                {
+	                $('#editrole-form').modal('hide');
+                    switch (response.code) {
+                        case 200:
+                            var row = $("#roleTable tr").filter(function (){return $(this).attr("id") == response.role.id});
+	                        row.find("#roleName").html(response.role.name);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            });
+	 });
+     
     var form = $("#addRole");
     form.on("submit", function (event) {
         event.preventDefault();
@@ -85,7 +161,23 @@
                 switch (response.code) {
                     case 200:
                         $('#addrole-form').modal('hide');
-                        $('#roleTable tr:last').after("<tr><td>" + response.role.id + "</td><td>" + response.role.name + "</td><td><a asp-page='/Edit' asp-route-id='" + response.role.id + "'>edit</a><button type='submit' asp-page-handler='delete' asp-route-id=" + response.role.id + "> delete </button> </td> </tr>");
+                        $('#roleTable tr:last').after("<tr id='" + response.role.id + "'><td>" +
+	                                                        response.role.id + 
+	                                                    "</td><td>" + 
+                                                            response.role.name + 
+	                                                    "</td>" + 
+	                                                    "<td style='width: 25%'>" + 
+                                                            "<a class='btn btn-xs btn-danger pull-right' onclick='deleteRole(" + 
+	                                                            response.role.id +
+	                                                            ")' style='margin-left: 2px'>" +
+                                                                "<i class='fa fa-times'></i>" +
+                                                            "</a>" + 
+                                                            "<a class='btn btn-xs btn-warning pull-right' onclick='editRole(" + 
+	                                                            response.role.id + "," + "&apos;" + response.role.name + "&apos;" + ")'>" +
+                                                                "<i class='fa fa-pencil'></i>" +
+                                                            "</a>" +
+                                                        "</td>" +
+                                                        "</tr>"); 
                     break;
                 default:
                     break;

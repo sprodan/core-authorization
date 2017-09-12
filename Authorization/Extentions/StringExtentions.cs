@@ -5,7 +5,13 @@ using System.Threading.Tasks;
 
 namespace Authorization.Extentions
 {
-    public class StringExtentions
+    public static class StringExtentions
     {
+        public static Dictionary<string, string> DeserializeAjaxString(this string str)
+        {
+            return str.Split('&')
+					.Select(value => value.Split('='))
+					.ToDictionary(pair => pair[0], pair => pair[1]);
+        }
     }
 }

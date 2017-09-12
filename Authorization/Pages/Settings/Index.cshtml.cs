@@ -29,16 +29,14 @@ namespace Authorization.Pages.Settings
             return Page();
         }
 
-        //[AjaxOnly]
+        [AjaxOnly]
         public async Task<IActionResult> OnPostAddRoleAsync()
         {
             if(Request.Form.TryGetValue("jsonRequest", out StringValues data))
             {
-                var keyValuePairs = data.ToString().Split('&')
-                    .Select(value => value.Split('='))
-                    .ToDictionary(pair => pair[0], pair => pair[1]);
+                var dict = data.ToString().DeserializeAjaxString();
 
-                var name = HttpUtility.UrlDecode(keyValuePairs["name"]);
+                var name = HttpUtility.UrlDecode(dict["name"]);
                 
                 if (!string.IsNullOrWhiteSpace(name))
                 {
@@ -51,5 +49,48 @@ namespace Authorization.Pages.Settings
              return new JsonResult(new { Status = "ERROR", Code = 500 });
             
         }
+
+		[AjaxOnly]
+		public async Task<IActionResult> OnPostDeleteRoleAsync()
+		{
+			if (Request.Form.TryGetValue("jsonRequest", out StringValues data))
+			{
+				var id = HttpUtility.UrlDecode(data);
+                if (!string.IsNullOrWhiteSpace(id)){
+					if (int.TryParse(id, out int intId))
+					{
+						var role = await _db.Roles.FindAsync(intId);
+						_db.Roles.Remove(role);
+						await _db.SaveChangesAsync();
+						return new JsonResult(new { Status = "OK", Code = 200 });
+					}
+                }
+			}
+			return new JsonResult(new { Status = "ERROR", Code = 500 });
+        }
+
+		[AjaxOnly]
+		public async Task<IActionResult> OnPostEditRoleAsync()
+		{
+			if (Request.Form.TryGetValue("jsonRequest", out StringValues data))
+			{
+                var dict = data.ToString().DeserializeAjaxString();
+
+				var name = HttpUtility.UrlDecode(dict["name"]);
+				var id = HttpUtility.UrlDecode(dict["id"]);
+				if (!string.IsNullOrWhiteSpace(id))
+				{
+					if (int.TryParse(id, out int intId))
+					{
+						var role = await _db.Roles.FindAsync(intId);
+                        role.Name = name;
+                        _db.Attach(role).State = EntityState.Modified;
+						await _db.SaveChangesAsync();
+						return new JsonResult(new { Status = "OK", Code = 200, Role = role });
+					}
+				}
+			}
+			return new JsonResult(new { Status = "ERROR", Code = 500 });
+		}
     }
 }
