@@ -1,5 +1,5 @@
 ﻿@page
-@model RolemodelModel
+@model Authorization.Pages.Settings.RolemodelModel
 
 <div class="row animated fadeInRightBig">
     <div class="col-lg-12">
@@ -173,7 +173,7 @@
     function deleteRole(id){
         var token = $('[name=__RequestVerificationToken]').val();
         $.ajax({
-                url: "/Settings?handler=deleterole",
+                url: "/Settings/Rolemodel?handler=deleterole",
                 type: 'POST',
                 dataType: "json",
                 data: { __RequestVerificationToken: token, jsonRequest: id },
@@ -206,7 +206,7 @@
         var data = editRoleForm.serialize();
         var token = $('[name=__RequestVerificationToken]').val();
         $.ajax({
-                url: "/Settings?handler=editrole",
+                url: "/Settings/Rolemodel?handler=editrole",
                 type: 'POST',
                 dataType: "json",
                 data: { __RequestVerificationToken: token, jsonRequest: data},
@@ -232,7 +232,7 @@
         var token = $('[name=__RequestVerificationToken]').val();
 
         $.ajax({
-            url: "/Settings?handler=addrole",
+            url: "/Settings/Rolemodel?handler=addrole",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: data },
@@ -272,7 +272,7 @@
     function deleteModule(id){
         var token = $('[name=__RequestVerificationToken]').val();
         $.ajax({
-            url: "/Settings?handler=deletemodule",
+            url: "/Settings/Rolemodel?handler=deletemodule",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: id },
@@ -305,7 +305,7 @@
         var data = editModuleForm.serialize();
         var token = $('[name=__RequestVerificationToken]').val();
         $.ajax({
-            url: "/Settings?handler=editmodule",
+            url: "/Settings/Rolemodel?handler=editmodule",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: data},
@@ -331,7 +331,7 @@
         var token = $('[name=__RequestVerificationToken]').val();
 
         $.ajax({
-            url: "/Settings?handler=addmodule",
+            url: "/Settings/Rolemodel?handler=addmodule",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: data },

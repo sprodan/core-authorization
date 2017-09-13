@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Authorization.Data;
 using Microsoft.EntityFrameworkCore;
+using Authorization.Models;
 using Authorization.Extentions;
 using System.IO;
 using System.Text;
