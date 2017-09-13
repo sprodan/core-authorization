@@ -1,0 +1,371 @@
+﻿@page
+@model RolemodelModel
+
+<div class="row animated fadeInRightBig">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="col-md-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Роли</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form method="post">
+                            <table class="table" id="roleTable">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Название</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <tr id="@role.Id">
+                                        <td>@role.Id</td>
+                                        <td id="roleName">@role.Name</td>
+                                        <td style="width: 25%">
+                                            <a class="btn btn-xs btn-danger pull-right" onclick="deleteRole(@role.Id)" style="margin-left: 2px">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                            <a class="btn btn-xs btn-warning pull-right" onclick="editRole(@role.Id, '@role.Name')">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="ibox-footer">
+                        <div class="text-center">
+                            <a data-toggle="modal" class="btn btn-primary" href="#addrole-form">Добавить роль</a>
+                        </div>
+                        <div id="addrole-form" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Добавить роль</h3>
+                                                <form role="form" id="addRole">
+                                                    <div class="form-group"><label>Название</label> <input type="text" placeholder="Название" class="form-control" name="name"></div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Добавить</strong></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="editrole-form" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Изменить роль</h3>
+                                                <form role="form" id="editRoleForm">
+                                                    <input type="hidden" id="idEditRoleForm" name="id"/>
+                                                    <div class="form-group"><label>Название</label> <input id="nameEditRoleForm" type="text" placeholder="Название" class="form-control" name="name" value=""></div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Модули</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form method="post">
+                            <table class="table" id="moduleTable">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Название</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var module in Model.Modules)
+                                {
+                                    <tr id="@module.Id">
+                                        <td>@module.Id</td>
+                                        <td id="moduleName">@module.Name</td>
+                                        <td style="width: 25%">
+                                            <a class="btn btn-xs btn-danger pull-right" onclick="deleteModule(@module.Id)" style="margin-left: 2px">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                            <a class="btn btn-xs btn-warning pull-right" onclick="editModule(@module.Id, '@module.Name')">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="ibox-footer">
+                        <div class="text-center">
+                            <a data-toggle="modal" class="btn btn-primary" href="#addmodule-form">Добавить модуль</a>
+                        </div>
+                        <div id="addmodule-form" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Добавить модуль</h3>
+                                                <form role="form" id="addModule">
+                                                    <div class="form-group"><label>Название</label> <input type="text" placeholder="Название" class="form-control" name="name"></div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Добавить</strong></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="editmodule-form" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Изменить модуль</h3>
+                                                <form role="form" id="editModuleForm">
+                                                    <input type="hidden" id="idEditModuleForm" name="id"/>
+                                                    <div class="form-group"><label>Название</label> <input id="nameEditModuleForm" type="text" placeholder="Название" class="form-control" name="name" value=""></div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function deleteRole(id){
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+                url: "/Settings?handler=deleterole",
+                type: 'POST',
+                dataType: "json",
+                data: { __RequestVerificationToken: token, jsonRequest: id },
+                success: function (response)
+                {
+                    switch (response.code) {
+                        case 200:
+                            $("#roleTable tr").filter(function (){return $(this).attr("id") == id}).remove();
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            });
+     }
+
+    function editRole(id, name){
+        $("input").filter(function() {
+            return $(this).attr("id") == "idEditRoleForm"
+        }).val(id);
+        $("input").filter(function() {
+            return $(this).attr("id") == "nameEditRoleForm"
+        }).val(name);
+        $('#editrole-form').modal('show');
+    }
+    
+     var editRoleForm = $("#editRoleForm");
+     editRoleForm.on("submit", function (event){
+        event.preventDefault();
+        var data = editRoleForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+                url: "/Settings?handler=editrole",
+                type: 'POST',
+                dataType: "json",
+                data: { __RequestVerificationToken: token, jsonRequest: data},
+                success: function (response)
+                {
+                    $('#editrole-form').modal('hide');
+                    switch (response.code) {
+                        case 200:
+                            var row = $("#roleTable tr").filter(function (){return $(this).attr("id") == response.role.id});
+                            row.find("#roleName").html(response.role.name);
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            });
+     });
+     
+    var form = $("#addRole");
+    form.on("submit", function (event) {
+        event.preventDefault();
+        var data = form.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+
+        $.ajax({
+            url: "/Settings?handler=addrole",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response)
+            {
+                switch (response.code) {
+                    case 200:
+                        $('#addrole-form').modal('hide');
+                        $('#roleTable tr:last').after("<tr id='" + response.role.id + "'><td>" +
+                                                            response.role.id + 
+                                                        "</td><td>" + 
+                                                            response.role.name + 
+                                                        "</td>" + 
+                                                        "<td style='width: 25%'>" + 
+                                                            "<a class='btn btn-xs btn-danger pull-right' onclick='deleteRole(" + 
+                                                                response.role.id +
+                                                                ")' style='margin-left: 2px'>" +
+                                                                "<i class='fa fa-times'></i>" +
+                                                            "</a>" + 
+                                                            "<a class='btn btn-xs btn-warning pull-right' onclick='editRole(" + 
+                                                                response.role.id + "," + "&apos;" + response.role.name + "&apos;" + ")'>" +
+                                                                "<i class='fa fa-pencil'></i>" +
+                                                            "</a>" +
+                                                        "</td>" +
+                                                        "</tr>"); 
+                    break;
+                default:
+                    break;
+
+
+                }
+            }
+        });
+    });
+
+
+    function deleteModule(id){
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Settings?handler=deletemodule",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: id },
+            success: function (response)
+            {
+                switch (response.code) {
+                case 200:
+                    $("#moduleTable tr").filter(function (){return $(this).attr("id") == id}).remove();
+                    break;
+                default:
+                    break;
+                }
+            }
+        });
+    }
+
+    function editModule(id, name){
+        $("input").filter(function() {
+            return $(this).attr("id") == "idEditModuleForm"
+        }).val(id);
+        $("input").filter(function() {
+            return $(this).attr("id") == "nameEditModuleForm"
+        }).val(name);
+        $('#editmodule-form').modal('show');
+    }
+    
+    var editModuleForm = $("#editModuleForm");
+    editModuleForm.on("submit", function (event){
+        event.preventDefault();
+        var data = editModuleForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Settings?handler=editmodule",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data},
+            success: function (response)
+            {
+                $('#editmodule-form').modal('hide');
+                switch (response.code) {
+                case 200:
+                    var row = $("#moduleTable tr").filter(function (){return $(this).attr("id") == response.module.id});
+                    row.find("#moduleName").html(response.module.name);
+                    break;
+                default:
+                    break;
+                }
+            }
+        });
+    });
+     
+    var moduleForm = $("#addModule");
+    moduleForm.on("submit", function (event) {
+        event.preventDefault();
+        var data = moduleForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+
+        $.ajax({
+            url: "/Settings?handler=addmodule",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response)
+            {
+                switch (response.code) {
+                case 200:
+                    $('#addmodule-form').modal('hide');
+                    $('#moduleTable tr:last').after("<tr id='" + response.module.id + "'><td>" +
+                        response.module.id + 
+                        "</td><td>" + 
+                        response.module.name + 
+                        "</td>" + 
+                        "<td style='width: 25%'>" + 
+                        "<a class='btn btn-xs btn-danger pull-right' onclick='deleteModule(" + 
+                        response.module.id +
+                        ")' style='margin-left: 2px'>" +
+                        "<i class='fa fa-times'></i>" +
+                        "</a>" + 
+                        "<a class='btn btn-xs btn-warning pull-right' onclick='editModule(" + 
+                        response.module.id + "," + "&apos;" + response.module.name + "&apos;" + ")'>" +
+                        "<i class='fa fa-pencil'></i>" +
+                        "</a>" +
+                        "</td>" +
+                        "</tr>"); 
+                    break;
+                default:
+                    break;
+
+
+                }
+            }
+        });
+    });
+
+
+</script>

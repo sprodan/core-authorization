@@ -16,4 +16,9 @@
   <ItemGroup>
     <Folder Include="wwwroot\css\patterns\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Pages\Settings\Rolemodel.cshtml.cs">
+      <DependentUpon>Rolemodel.cshtml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
