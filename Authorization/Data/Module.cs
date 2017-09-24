@@ -9,10 +9,10 @@ namespace Authorization.Data
     {
         public Module()
         {
-            this.Roles = new HashSet<Role>();
+            RoleModules = new HashSet<RoleModule>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<Role> Roles { get; set; }
+        public ICollection<RoleModule> RoleModules { get; set; }
     }
 }

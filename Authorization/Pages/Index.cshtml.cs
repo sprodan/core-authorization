@@ -23,24 +23,11 @@ namespace Authorization.Pages
             Breadcrumbs.Enqueue(new Breadcrumb { Title = "test", NavigationUrl = "/" });
             Breadcrumbs.Enqueue(new Breadcrumb { Title = "test", NavigationUrl = "/" });
         }
-
-        public IList<User> Users { get; private set; }
         
         public async Task<IActionResult> OnGetAsync()
         {
             return Page();
         }
-
-        public async Task<IActionResult> OnPostDeleteAsync(int id)
-        {
-            var user = await _db.Users.FindAsync(id);
-
-            if(user != null)
-            {
-                _db.Users.Remove(user);
-                await _db.SaveChangesAsync();
-            }
-            return RedirectToPage();
-        }
+        
     }
 }

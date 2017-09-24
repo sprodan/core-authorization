@@ -21,8 +21,9 @@ namespace Authorization
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options =>
-                              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            var connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContextPool<AppDbContext>(options =>
+                              options.UseSqlServer(connection));
             services.AddMvc();
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

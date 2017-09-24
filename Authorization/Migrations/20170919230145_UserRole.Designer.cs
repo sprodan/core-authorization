@@ -11,9 +11,10 @@ using System;
 namespace Authorization.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170919230145_UserRole")]
+    partial class UserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,13 +70,19 @@ namespace Authorization.Migrations
 
                     b.Property<int?>("TeamId");
 
+                    b.Property<int?>("UserId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PhotoId");
 
                     b.HasIndex("PositionId");
 
-                    b.HasIndex("TeamId");
+                    b.HasIndex("TeamId")
+                        .IsUnique()
+                        .HasFilter("[TeamId] IS NOT NULL");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Employees");
                 });
@@ -109,15 +116,15 @@ namespace Authorization.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Grade");
+                    b.Property<int?>("DepartmentId");
 
-                    b.Property<int>("IdDepartment");
+                    b.Property<int>("Grade");
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdDepartment");
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Positions");
                 });
@@ -153,17 +160,13 @@ namespace Authorization.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("IdDepartment");
-
-                    b.Property<int>("IdEmployee");
+                    b.Property<int?>("DepartmentId");
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdDepartment");
-
-                    b.HasIndex("IdEmployee");
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("Teams");
                 });
@@ -172,10 +175,6 @@ namespace Authorization.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("IdEmployee");
-
-                    b.Property<int>("IdRole");
 
                     b.Property<bool>("IsActive");
 
@@ -187,11 +186,11 @@ namespace Authorization.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
+                    b.Property<int?>("RoleId");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdEmployee");
-
-                    b.HasIndex("IdRole");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -214,16 +213,19 @@ namespace Authorization.Migrations
                         .HasForeignKey("PositionId");
 
                     b.HasOne("Authorization.Data.Team", "Team")
+                        .WithOne("Chief")
+                        .HasForeignKey("Authorization.Data.Employee", "TeamId");
+
+                    b.HasOne("Authorization.Data.User", "User")
                         .WithMany()
-                        .HasForeignKey("TeamId");
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Authorization.Data.Position", b =>
                 {
                     b.HasOne("Authorization.Data.Department", "Department")
-                        .WithMany("Positions")
-                        .HasForeignKey("IdDepartment")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
                 });
 
             modelBuilder.Entity("Authorization.Data.RoleModule", b =>
@@ -242,27 +244,15 @@ namespace Authorization.Migrations
             modelBuilder.Entity("Authorization.Data.Team", b =>
                 {
                     b.HasOne("Authorization.Data.Department", "Department")
-                        .WithMany("Teams")
-                        .HasForeignKey("IdDepartment")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Authorization.Data.Employee", "Employee")
-                        .WithMany("Teams")
-                        .HasForeignKey("IdEmployee")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("DepartmentId");
                 });
 
             modelBuilder.Entity("Authorization.Data.User", b =>
                 {
-                    b.HasOne("Authorization.Data.Employee", "Employee")
-                        .WithMany("Users")
-                        .HasForeignKey("IdEmployee")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Authorization.Data.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("IdRole")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany()
+                        .HasForeignKey("RoleId");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,9 +11,10 @@ using System;
 namespace Authorization.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170920032942_Users")]
+    partial class Users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,7 +174,7 @@ namespace Authorization.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("IdEmployee");
+                    b.Property<int?>("EmployeeId");
 
                     b.Property<int>("IdRole");
 
@@ -189,7 +190,7 @@ namespace Authorization.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdEmployee");
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("IdRole");
 
@@ -256,8 +257,7 @@ namespace Authorization.Migrations
                 {
                     b.HasOne("Authorization.Data.Employee", "Employee")
                         .WithMany("Users")
-                        .HasForeignKey("IdEmployee")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("EmployeeId");
 
                     b.HasOne("Authorization.Data.Role", "Role")
                         .WithMany("Users")

@@ -14,20 +14,21 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Web;
 
-namespace Authorization.Pages.Settings
+namespace Authorization.Pages.Settings.RoleModel
 {
-    public class RolemodelModel : BasePageModel
+    public class Edit : BasePageModel
     {
 		[BindProperty]
 		public IList<Role> Roles { get; set; }
 		public IList<Module> Modules { get; set; }
-		public RolemodelModel(AppDbContext db) : base(db)
+		public Edit(AppDbContext db) : base(db)
         {
             this.Title = "Изменение ролей";
             this.Breadcrumbs = new Queue<Breadcrumb>();
-			Breadcrumbs.Enqueue(new Breadcrumb { Title = "Главная", NavigationUrl = "/" });
-			Breadcrumbs.Enqueue(new Breadcrumb { Title = "Настройки", NavigationUrl = "/settings" });
-		    Breadcrumbs.Enqueue(new Breadcrumb { Title = "Изменение ролей", NavigationUrl = "/settings/rolemodel" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "Главная", NavigationUrl = "/" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "..." });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "Ролевая модель", NavigationUrl = "/settings/rolemodel/index" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "Изменение ролей", NavigationUrl = "/settings/rolemodel/edit" });
         }
 		public async Task<IActionResult> OnGetAsync()
 		{
@@ -83,8 +84,7 @@ namespace Authorization.Pages.Settings
 			if (Request.Form.TryGetValue("jsonRequest", out StringValues data))
 			{
 				var dict = data.ToString().DeserializeAjaxString();
-
-				var name = HttpUtility.UrlDecode(dict["name"]);
+                var name = HttpUtility.UrlDecode(dict["name"]);
 				var id = HttpUtility.UrlDecode(dict["id"]);
 				if (!string.IsNullOrWhiteSpace(id))
 				{

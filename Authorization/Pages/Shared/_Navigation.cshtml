@@ -25,9 +25,22 @@
                     MD
                 </div>
             </li>
-
+            <li>
+                <a href="@Url.Page("/Index")"><i class="fa fa-home"></i> <span class="nav-label" data-i18n="nav.dashboard">Главная</span> </a>
+            </li>
             <li class="isSelected">
-                <a href="@Url.Page("/Settings/Index")"><i class="fa fa-pie-chart"></i> <span class="nav-label" data-i18n="nav.dashboard">Настройки</span> </a>
+                <a href="#"><i class="fa fa-hacker-news"></i> <span class="nav-label" data-i18n="nav.otherpages">Орг. Структура</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li class=""><a href="@Url.Page("/Structure/Index")">Отделы</a></li>
+                    <li class=""><a href="@Url.Page("/Structure/Teams")">Команды</a></li>
+                </ul>
+            </li>
+            <li class="isSelected">
+                <a href="#"><i class="fa fa-cogs"></i> <span class="nav-label" data-i18n="nav.otherpages">Настройки</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse">
+                    <li class=""><a href="@Url.Page("/Settings/Users/Index")">Аккаунты</a></li>
+                    <li class=""><a href="@Url.Page("/Settings/RoleModel/Index")">Ролевая модель</a></li>
+                </ul>
             </li>
             @*<li class="@Html.IsSelected(controller: "HR")">
                 <a href="#"><i class="fa fa-files-o"></i> <span class="nav-label" data-i18n="nav.otherpages">HR</span><span class="fa arrow"></span></a>

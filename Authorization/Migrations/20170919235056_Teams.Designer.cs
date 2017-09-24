@@ -11,9 +11,10 @@ using System;
 namespace Authorization.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170919235056_Teams")]
+    partial class Teams
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,6 +70,8 @@ namespace Authorization.Migrations
 
                     b.Property<int?>("TeamId");
 
+                    b.Property<int?>("UserId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PhotoId");
@@ -76,6 +79,8 @@ namespace Authorization.Migrations
                     b.HasIndex("PositionId");
 
                     b.HasIndex("TeamId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Employees");
                 });
@@ -173,8 +178,6 @@ namespace Authorization.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("IdEmployee");
-
                     b.Property<int>("IdRole");
 
                     b.Property<bool>("IsActive");
@@ -188,8 +191,6 @@ namespace Authorization.Migrations
                         .HasMaxLength(100);
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IdEmployee");
 
                     b.HasIndex("IdRole");
 
@@ -216,6 +217,10 @@ namespace Authorization.Migrations
                     b.HasOne("Authorization.Data.Team", "Team")
                         .WithMany()
                         .HasForeignKey("TeamId");
+
+                    b.HasOne("Authorization.Data.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Authorization.Data.Position", b =>
@@ -254,11 +259,6 @@ namespace Authorization.Migrations
 
             modelBuilder.Entity("Authorization.Data.User", b =>
                 {
-                    b.HasOne("Authorization.Data.Employee", "Employee")
-                        .WithMany("Users")
-                        .HasForeignKey("IdEmployee")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Authorization.Data.Role", "Role")
                         .WithMany("Users")
                         .HasForeignKey("IdRole")

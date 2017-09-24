@@ -14,11 +14,8 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Pages\Structure\" />
+    <Folder Include="Pages\Settings\Users\" />
     <Folder Include="wwwroot\css\patterns\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Pages\Settings\Rolemodel.cshtml.cs">
-      <DependentUpon>Rolemodel.cshtml</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

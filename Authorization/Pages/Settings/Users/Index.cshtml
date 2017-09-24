@@ -1,0 +1,123 @@
+﻿@page
+@model Authorization.Pages.Settings.Users.IndexModel
+@{
+}
+
+
+<div class="row animated fadeInRightBig">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="col-md-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>Пользователи</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form method="post">
+                            <table class="table" id="roleTable">
+                                <thead>
+                                    <tr>
+                                        <th>Login</th>
+                                        <th>Фио</th>
+                                        <th>Роль</th>
+                                        <th>Online</th>
+                                    </tr> 
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.Users)
+                                    {
+                                        <tr id="@user.Id">
+                                            <td>@user.Login 
+                                                <a class="btn btn-xs btn-warning pull-right" onclick="updatePassword(@user.Id)" style="margin-left: 2px">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                            </td>
+                                            <td>@user.Name</td>
+                                            <td>@user.Role.Name
+                                                <a class="btn btn-xs btn-warning pull-right" onclick="updateRole(@user.Id)" style="margin-left: 2px">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                            </td>
+                                            <td>@user.IsOnline</td>
+                                            <td style="width: 25%">
+                                                <a class="btn btn-xs btn-danger pull-right" onclick="blockUser(@user.Id)">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    <div class="ibox-footer">
+                        <div id="updatePassword-modal" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Обновить пароль?</h3>
+                                                <div>
+                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Отмена</strong></button>
+                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Подтвердить</strong></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="editRole-modal" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Изменить роль</h3>
+                                                <form role="form" id="editRoleForm">
+                                                    <input type="hidden" id="idUserRole" name="idUser"/>
+                                                    <div class="form-group">
+                                                        <label>Выберите роль</label> 
+                                                        <select id="idRole" class="form-control" name="idRole">
+                                                            @foreach(var role in Model.Roles)
+                                                            {
+                                                                <option id="@role.Id">
+                                                                    @role.Name
+                                                                </option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="blockUser-modal" class="modal fade" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <h3 class="m-t-none m-b">Заблокировать пользователя?</h3>
+                                                <div>
+                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Отмена</strong></button>
+                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Подтвердить</strong></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
