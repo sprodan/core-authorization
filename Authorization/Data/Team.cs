@@ -9,7 +9,9 @@ namespace Authorization.Data
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public int IdDepartment { get; set; }
         public Department Department { get; set; }
-        public Employee Chief { get; set; }
+        public int IdEmployee { get; set; }
+        public Employee Employee { get; set; }
     }
 }

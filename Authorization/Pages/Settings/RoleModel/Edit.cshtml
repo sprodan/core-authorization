@@ -1,6 +1,5 @@
 ﻿@page
-@model Authorization.Pages.Settings.Index
-
+@model Authorization.Pages.Settings.RoleModel.Edit
 
 <div class="row animated fadeInRightBig">
     <div class="col-lg-12">
@@ -173,8 +172,8 @@
 <script>
     function deleteRole(id){
         var token = $('[name=__RequestVerificationToken]').val();
-    	$.ajax({
-                url: "/Settings?handler=deleterole",
+        $.ajax({
+                url: "/Settings/RoleModel/Edit?handler=deleterole",
                 type: 'POST',
                 dataType: "json",
                 data: { __RequestVerificationToken: token, jsonRequest: id },
@@ -191,40 +190,40 @@
             });
      }
 
-	function editRole(id, name){
-	    $("input").filter(function() {
-	        return $(this).attr("id") == "idEditRoleForm"
+    function editRole(id, name){
+        $("input").filter(function() {
+            return $(this).attr("id") == "idEditRoleForm"
         }).val(id);
-	    $("input").filter(function() {
+        $("input").filter(function() {
             return $(this).attr("id") == "nameEditRoleForm"
         }).val(name);
         $('#editrole-form').modal('show');
-	}
-	
-	 var editRoleForm = $("#editRoleForm");
-	 editRoleForm.on("submit", function (event){
+    }
+    
+     var editRoleForm = $("#editRoleForm");
+     editRoleForm.on("submit", function (event){
         event.preventDefault();
-	    var data = editRoleForm.serialize();
-	    var token = $('[name=__RequestVerificationToken]').val();
-	    $.ajax({
-                url: "/Settings?handler=editrole",
+        var data = editRoleForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Settings/RoleModel/Edit?handler=editrole",
                 type: 'POST',
                 dataType: "json",
                 data: { __RequestVerificationToken: token, jsonRequest: data},
                 success: function (response)
                 {
-	                $('#editrole-form').modal('hide');
+                    $('#editrole-form').modal('hide');
                     switch (response.code) {
                         case 200:
                             var row = $("#roleTable tr").filter(function (){return $(this).attr("id") == response.role.id});
-	                        row.find("#roleName").html(response.role.name);
+                            row.find("#roleName").html(response.role.name);
                         break;
                     default:
                         break;
                     }
                 }
             });
-	 });
+     });
      
     var form = $("#addRole");
     form.on("submit", function (event) {
@@ -233,7 +232,7 @@
         var token = $('[name=__RequestVerificationToken]').val();
 
         $.ajax({
-            url: "/Settings?handler=addrole",
+            url: "/Settings/RoleModel/Edit?handler=addrole",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: data },
@@ -243,18 +242,18 @@
                     case 200:
                         $('#addrole-form').modal('hide');
                         $('#roleTable tr:last').after("<tr id='" + response.role.id + "'><td>" +
-	                                                        response.role.id + 
-	                                                    "</td><td>" + 
+                                                            response.role.id + 
+                                                        "</td><td>" + 
                                                             response.role.name + 
-	                                                    "</td>" + 
-	                                                    "<td style='width: 25%'>" + 
+                                                        "</td>" + 
+                                                        "<td style='width: 25%'>" + 
                                                             "<a class='btn btn-xs btn-danger pull-right' onclick='deleteRole(" + 
-	                                                            response.role.id +
-	                                                            ")' style='margin-left: 2px'>" +
+                                                                response.role.id +
+                                                                ")' style='margin-left: 2px'>" +
                                                                 "<i class='fa fa-times'></i>" +
                                                             "</a>" + 
                                                             "<a class='btn btn-xs btn-warning pull-right' onclick='editRole(" + 
-	                                                            response.role.id + "," + "&apos;" + response.role.name + "&apos;" + ")'>" +
+                                                                response.role.id + "," + "&apos;" + response.role.name + "&apos;" + ")'>" +
                                                                 "<i class='fa fa-pencil'></i>" +
                                                             "</a>" +
                                                         "</td>" +
@@ -273,7 +272,7 @@
     function deleteModule(id){
         var token = $('[name=__RequestVerificationToken]').val();
         $.ajax({
-            url: "/Settings?handler=deletemodule",
+            url: "/Settings/RoleModel/Edit?handler=deletemodule",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: id },
@@ -299,14 +298,14 @@
         }).val(name);
         $('#editmodule-form').modal('show');
     }
-	
+    
     var editModuleForm = $("#editModuleForm");
     editModuleForm.on("submit", function (event){
         event.preventDefault();
         var data = editModuleForm.serialize();
         var token = $('[name=__RequestVerificationToken]').val();
         $.ajax({
-            url: "/Settings?handler=editmodule",
+            url: "/Settings/RoleModel/Edit?handler=editmodule",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: data},
@@ -332,7 +331,7 @@
         var token = $('[name=__RequestVerificationToken]').val();
 
         $.ajax({
-            url: "/Settings?handler=addmodule",
+            url: "/Settings/RoleModel/Edit?handler=addmodule",
             type: 'POST',
             dataType: "json",
             data: { __RequestVerificationToken: token, jsonRequest: data },

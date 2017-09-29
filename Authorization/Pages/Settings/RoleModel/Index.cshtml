@@ -1,0 +1,82 @@
+﻿@page
+@model Authorization.Pages.Settings.RoleModel.Index
+
+
+<div class="row animated fadeInRightBig">
+    @Html.AntiForgeryToken();
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>Роли</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="table-responsive">
+                        <table class="table" id="roleTable">
+                            <thead>
+                                <tr>
+                                    <th>роли/модули</th>
+                                    @foreach(var module in Model.Modules)
+								{
+                                        <th>@module.Name</th>
+								}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var role in Model.Roles)
+    						{
+                                    <tr>
+                                        <td>
+                                            @role.Name
+                                        </td>
+                                        @foreach(var module in Model.Modules)
+								    {
+                                            <td>
+                                                @if (Model.RoleModules.Where(x => x.IdModule == module.Id && x.IdRole == role.Id).Count() > 0)
+                                            {
+                                                    <input type="checkbox" checked data-idrole="@role.Id" data-idmodule="@module.Id" class="rolemodelcheck" />
+                                            }
+                                            else
+                                            {
+                                                    <input type="checkbox" data-idrole="@role.Id" data-idmodule="@module.Id" class="rolemodelcheck" />
+
+                                            }
+                                            </td>
+								    }
+                                    </tr>
+    						}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="ibox-footer">
+                        
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(".rolemodelcheck").on("change", function (e) {
+        var checkBox = $(this);
+        var idRole = checkBox.data("idrole");
+        var idModule = checkBox.data("idmodule");
+        var checked = checkBox[0].checked;
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Settings/RoleModel?handler=editrolemodule",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: "idmodule=" + idModule + "&idrole=" + idRole + "&checked=" + checked},
+            success: function (response) {
+                switch (response.code) {
+                    case 200:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    });
+</script>
