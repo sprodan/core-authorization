@@ -25,14 +25,16 @@ namespace Authorization.Pages.Settings.Users
         public List<Role> Roles { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
-            Roles = await _db.Roles.AsNoTracking().ToListAsync();
-            var users = await _db.Users.AsNoTracking().ToListAsync();
+            Roles = await _db.Roles.ToListAsync();
+            var users = await _db.Users.ToListAsync();
+            var employees = await _db.Employees.ToListAsync();
             Users = new List<Models.User>();
             foreach(var user in users)
             {
                 var isOnline = false;
-                var role = await _db.Roles.FindAsync(user.IdRole);
-                var employee = await _db.Employees.FindAsync(user.IdEmployee);
+                var role = await _db.Roles.FindAsync(user.Role.Id);
+
+                var employee = employees.Find(x => x.Id == user.Employee.Id);
                 Users.Add(new Models.User()
                 {
                     Id = user.Id,

@@ -32,7 +32,7 @@
                                         @foreach(var module in Model.Modules)
 								    {
                                             <td>
-                                                @if (Model.RoleModules.Where(x => x.IdModule == module.Id && x.IdRole == role.Id).Count() > 0)
+                                                @if (Model.RoleModules.Where(x => x.Module?.Id == module.Id && x.Role?.Id == role.Id).Count() > 0)
                                             {
                                                     <input type="checkbox" checked data-idrole="@role.Id" data-idmodule="@module.Id" class="rolemodelcheck" />
                                             }

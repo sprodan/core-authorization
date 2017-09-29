@@ -13,10 +13,9 @@ namespace Authorization.Data
         public string Login { get; set; }
         [Required, StringLength(100)]
         public string Password { get; set; }
-        public int IdRole { get; set; }
         public Role Role { get; set; }
-        public bool IsActive { get; set; }
-        public int IdEmployee { get; set; }
         public Employee Employee { get; set; }
+        public bool IsActive { get; set; }
+        
     }
 }

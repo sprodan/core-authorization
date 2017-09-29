@@ -37,9 +37,9 @@ namespace Authorization.Pages.Settings.RoleModel
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Roles = await _db.Roles.AsNoTracking().ToListAsync();
-            Modules = await _db.Modules.AsNoTracking().ToListAsync();
-            RoleModules = await _db.RoleModules.AsNoTracking().ToListAsync();
+            Roles = await _db.Roles.ToListAsync();
+            Modules = await _db.Modules.ToListAsync();
+            RoleModules = await _db.RoleModules.ToListAsync();
             return Page();
         }
         [AjaxOnly]
@@ -58,7 +58,9 @@ namespace Authorization.Pages.Settings.RoleModel
                     if (role == null) return new JsonResult(new { Status = "ERROR", Code = 500 });
                     var module = await _db.Modules.FindAsync(idModule);
                     if(module == null) return new JsonResult(new { Status = "ERROR", Code = 500 });
-                    var rolemodule = await _db.RoleModules.Where(x => x.IdRole == role.Id && x.IdModule == module.Id).FirstOrDefaultAsync();
+                    //var rolemodule = await _db.RoleModules.Where(x => x.RoleId == role.Id && x.ModuleId == module.Id).FirstOrDefaultAsync();
+                    var rolemodule = await _db.RoleModules.Where(x => x.Role.Id == role.Id && x.Module.Id == module.Id).FirstOrDefaultAsync();
+
                     if (c)
                     {
                         if(rolemodule == null)

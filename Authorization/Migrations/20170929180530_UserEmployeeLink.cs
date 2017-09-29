@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Authorization.Migrations
 {
-    public partial class UserRole2 : Migration
+    public partial class UserEmployeeLink : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
