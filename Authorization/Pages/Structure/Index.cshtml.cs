@@ -11,7 +11,7 @@ namespace Authorization.Pages.Structure
 {
     public class IndexModel : BasePageModel
     {
-        public IndexModel(AppDbContext db) : base(db)
+        public IndexModel(AppDbContext db) : base(db, "structure")
         {
             this.Title = "Структура компании";
             this.ActionTitle = "Система грейдов";

@@ -21,7 +21,7 @@ namespace Authorization.Pages.Settings.RoleModel
 		[BindProperty]
 		public IList<Role> Roles { get; set; }
 		public IList<Module> Modules { get; set; }
-		public Edit(AppDbContext db) : base(db)
+		public Edit(AppDbContext db) : base(db, "editRole")
         {
             this.Title = "Изменение ролей";
             this.Breadcrumbs = new Queue<Breadcrumb>();
@@ -108,9 +108,10 @@ namespace Authorization.Pages.Settings.RoleModel
 			{
 				var dict = data.ToString().DeserializeAjaxString();
 				var name = HttpUtility.UrlDecode(dict["name"]);
-				if (!string.IsNullOrWhiteSpace(name))
+                var code = HttpUtility.UrlDecode(dict["code"]);
+                if (!string.IsNullOrWhiteSpace(name) && !string.IsNullOrWhiteSpace(name))
 				{
-					var module = await _db.Modules.AddAsync(new Module() { Name = name });
+					var module = await _db.Modules.AddAsync(new Module() { Name = name, Code = code });
 					await _db.SaveChangesAsync();
 					return new JsonResult(new { Status = "OK", Code = 200, Module = module.Entity });
 				}
@@ -148,14 +149,18 @@ namespace Authorization.Pages.Settings.RoleModel
 				var dict = data.ToString().DeserializeAjaxString();
 
 				var name = HttpUtility.UrlDecode(dict["name"]);
-				var id = HttpUtility.UrlDecode(dict["id"]);
-				if (!string.IsNullOrWhiteSpace(id))
+                var code = HttpUtility.UrlDecode(dict["code"]);
+                var id = HttpUtility.UrlDecode(dict["id"]);
+				if (!string.IsNullOrWhiteSpace(id)
+                    && !string.IsNullOrWhiteSpace(code)
+                    && !string.IsNullOrWhiteSpace(name))
 				{
 					if (int.TryParse(id, out int intId))
 					{
 						var module = await _db.Modules.FindAsync(intId);
 						module.Name = name;
-						_db.Attach(module).State = EntityState.Modified;
+                        module.Code = code;
+                        _db.Attach(module).State = EntityState.Modified;
 						await _db.SaveChangesAsync();
 						return new JsonResult(new { Status = "OK", Code = 200, Module = module });
 					}

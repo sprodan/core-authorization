@@ -97,6 +97,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Название</th>
+                                    <th>Код</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -105,11 +106,12 @@
                                     <tr id="@module.Id">
                                         <td>@module.Id</td>
                                         <td id="moduleName">@module.Name</td>
+                                        <td id="moduleCode">@module.Code</td>
                                         <td style="width: 25%">
                                             <a class="btn btn-xs btn-danger pull-right" onclick="deleteModule(@module.Id)" style="margin-left: 2px">
                                                 <i class="fa fa-times"></i>
                                             </a>
-                                            <a class="btn btn-xs btn-warning pull-right" onclick="editModule(@module.Id, '@module.Name')">
+                                            <a class="btn btn-xs btn-warning pull-right" onclick="editModule(@module.Id, '@module.Name', '@module.Code')">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
                                         </td>
@@ -132,6 +134,7 @@
                                                 <h3 class="m-t-none m-b">Добавить модуль</h3>
                                                 <form role="form" id="addModule">
                                                     <div class="form-group"><label>Название</label> <input type="text" placeholder="Название" class="form-control" name="name"></div>
+                                                    <div class="form-group"><label>Код</label> <input type="text" placeholder="Код" class="form-control" name="code"></div>
                                                     <div>
                                                         <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Добавить</strong></button>
                                                     </div>
@@ -152,6 +155,7 @@
                                                 <form role="form" id="editModuleForm">
                                                     <input type="hidden" id="idEditModuleForm" name="id"/>
                                                     <div class="form-group"><label>Название</label> <input id="nameEditModuleForm" type="text" placeholder="Название" class="form-control" name="name" value=""></div>
+                                                    <div class="form-group"><label>Код</label> <input id="codeEditModuleForm" type="text" placeholder="Код" class="form-control" name="code" value=""></div>
                                                     <div>
                                                         <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
                                                     </div>
@@ -289,13 +293,16 @@
         });
     }
 
-    function editModule(id, name){
+    function editModule(id, name, code){
         $("input").filter(function() {
             return $(this).attr("id") == "idEditModuleForm"
         }).val(id);
         $("input").filter(function() {
             return $(this).attr("id") == "nameEditModuleForm"
         }).val(name);
+        $("input").filter(function () {
+            return $(this).attr("id") == "codeEditModuleForm"
+        }).val(code);
         $('#editmodule-form').modal('show');
     }
     
@@ -316,6 +323,7 @@
                 case 200:
                     var row = $("#moduleTable tr").filter(function (){return $(this).attr("id") == response.module.id});
                     row.find("#moduleName").html(response.module.name);
+                    row.find("#moduleCode").html(response.module.code);
                     break;
                 default:
                     break;
@@ -344,6 +352,8 @@
                         response.module.id + 
                         "</td><td>" + 
                         response.module.name + 
+                        "</td><td>" +
+                        response.module.code +
                         "</td>" + 
                         "<td style='width: 25%'>" + 
                         "<a class='btn btn-xs btn-danger pull-right' onclick='deleteModule(" + 
@@ -352,7 +362,7 @@
                         "<i class='fa fa-times'></i>" +
                         "</a>" + 
                         "<a class='btn btn-xs btn-warning pull-right' onclick='editModule(" + 
-                        response.module.id + "," + "&apos;" + response.module.name + "&apos;" + ")'>" +
+                        response.module.id + "," + "&apos;" + response.module.name + "&apos;" + "," + "&apos;" + response.module.code + "&apos;)'>" +
                         "<i class='fa fa-pencil'></i>" +
                         "</a>" +
                         "</td>" +

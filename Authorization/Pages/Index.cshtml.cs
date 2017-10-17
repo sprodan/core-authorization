@@ -13,7 +13,7 @@ namespace Authorization.Pages
 {
     public class IndexModel : BasePageModel 
     {
-        public IndexModel(AppDbContext db) : base(db)
+        public IndexModel(AppDbContext db) : base(db, "main")
         {
             this.Title = "Главная страница";
             this.ActionTitle = "Тест";

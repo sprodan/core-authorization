@@ -12,7 +12,7 @@ namespace Authorization.Pages.Settings.Users
 {
     public class IndexModel : BasePageModel
     {
-        public IndexModel(AppDbContext db) : base(db)
+        public IndexModel(AppDbContext db) : base(db, "users")
         {
             this.Title = "Пользователи";
             this.Breadcrumbs = new Queue<Breadcrumb>();

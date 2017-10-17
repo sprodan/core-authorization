@@ -24,7 +24,7 @@ namespace Authorization.Pages.Settings.RoleModel
         public IList<Module> Modules { get; set; }
 
         public IList<RoleModule> RoleModules { get; set; }
-        public Index(AppDbContext db) : base(db)
+        public Index(AppDbContext db) : base(db, "role")
         {
             this.Title = "Ролевая модель";
             this.ActionTitle = "Изменение ролей";
