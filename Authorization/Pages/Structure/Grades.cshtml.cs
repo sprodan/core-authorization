@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using Authorization.Extentions;
 using System.Web;
+using Microsoft.CodeAnalysis;
 
 namespace Authorization.Pages.Structure
 {
@@ -30,7 +31,8 @@ namespace Authorization.Pages.Structure
 
         public async Task<IActionResult> OnGetAsync()
         {
-            Departments = await _db.Departments.AsNoTracking().ToListAsync();
+            Departments = await _db.Departments.ToListAsync();
+            //var positions = await _db.Positions.ToListAsync();
             if (Departments == null) return Page(); //Todo make empty field
             foreach (var d in Departments)
             {
@@ -142,7 +144,8 @@ namespace Authorization.Pages.Structure
                 {
                     if(int.TryParse(departmentId, out int did) && int.TryParse(grade, out int g))
                     {
-                        var position = await _db.Positions.AddAsync(new Position() { Name = name, IdDepartment = did, Grade = g });
+                        var department = await _db.Departments.FindAsync(did);
+                        var position = await _db.Positions.AddAsync(new Position() { Name = name, Department = department, Grade = g });
                         await _db.SaveChangesAsync();
                         return new JsonResult(new { Status = "OK", Code = 200, Position = position.Entity });
                     }

@@ -5,45 +5,10 @@ using System.Collections.Generic;
 
 namespace Authorization.Migrations
 {
-    public partial class Init4 : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Authorization_User_UserId",
-                table: "Authorization");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_User",
-                table: "User");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Authorization",
-                table: "Authorization");
-
-            migrationBuilder.RenameTable(
-                name: "User",
-                newName: "Users");
-
-            migrationBuilder.RenameTable(
-                name: "Authorization",
-                newName: "Authorizations");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Authorization_UserId",
-                table: "Authorizations",
-                newName: "IX_Authorizations_UserId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Users",
-                table: "Users",
-                column: "Id");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Authorizations",
-                table: "Authorizations",
-                column: "Id");
-
             migrationBuilder.CreateTable(
                 name: "Departments",
                 columns: table => new
@@ -55,6 +20,19 @@ namespace Authorization.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Modules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Modules", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -71,12 +49,25 @@ namespace Authorization.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Positions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
                     Grade = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -88,6 +79,32 @@ namespace Authorization.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoleModules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ModuleId = table.Column<int>(type: "int", nullable: true),
+                    RoleId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoleModules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoleModules_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RoleModules_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -97,7 +114,8 @@ namespace Authorization.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -108,21 +126,7 @@ namespace Authorization.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Roles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ModuleId = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -135,10 +139,8 @@ namespace Authorization.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhotoId = table.Column<int>(type: "int", nullable: true),
                     PositionId = table.Column<int>(type: "int", nullable: true),
-                    RoleId = table.Column<int>(type: "int", nullable: true),
                     Surname = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TeamId = table.Column<int>(type: "int", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    TeamId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -156,44 +158,68 @@ namespace Authorization.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Employees_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
                         name: "FK_Employees_Teams_TeamId",
                         column: x => x.TeamId,
                         principalTable: "Teams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Login = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    RoleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Employees_Users_UserId",
+                        name: "FK_Users_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Users_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Authorizations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Expiration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Token = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Authorizations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Authorizations_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Modules",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<int>(type: "int", nullable: false),
-                    RoleId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Modules", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Modules_Roles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Authorizations_UserId",
+                table: "Authorizations",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_PhotoId",
@@ -206,26 +232,9 @@ namespace Authorization.Migrations
                 column: "PositionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_RoleId",
-                table: "Employees",
-                column: "RoleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Employees_TeamId",
                 table: "Employees",
-                column: "TeamId",
-                unique: true,
-                filter: "[TeamId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Employees_UserId",
-                table: "Employees",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Modules_RoleId",
-                table: "Modules",
-                column: "RoleId");
+                column: "TeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Positions_DepartmentId",
@@ -233,44 +242,72 @@ namespace Authorization.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Roles_ModuleId",
-                table: "Roles",
+                name: "IX_RoleModules_ModuleId",
+                table: "RoleModules",
                 column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RoleModules_RoleId",
+                table: "RoleModules",
+                column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teams_DepartmentId",
                 table: "Teams",
                 column: "DepartmentId");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Authorizations_Users_UserId",
-                table: "Authorizations",
-                column: "UserId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+            migrationBuilder.CreateIndex(
+                name: "IX_Teams_EmployeeId",
+                table: "Teams",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_EmployeeId",
+                table: "Users",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_RoleId",
+                table: "Users",
+                column: "RoleId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Roles_Modules_ModuleId",
-                table: "Roles",
-                column: "ModuleId",
-                principalTable: "Modules",
+                name: "FK_Teams_Employees_EmployeeId",
+                table: "Teams",
+                column: "EmployeeId",
+                principalTable: "Employees",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Authorizations_Users_UserId",
-                table: "Authorizations");
+                name: "FK_Employees_Photos_PhotoId",
+                table: "Employees");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Modules_Roles_RoleId",
-                table: "Modules");
+                name: "FK_Employees_Positions_PositionId",
+                table: "Employees");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Employees_Teams_TeamId",
+                table: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Employees");
+                name: "Authorizations");
+
+            migrationBuilder.DropTable(
+                name: "RoleModules");
+
+            migrationBuilder.DropTable(
+                name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Modules");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Photos");
@@ -285,49 +322,7 @@ namespace Authorization.Migrations
                 name: "Departments");
 
             migrationBuilder.DropTable(
-                name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Modules");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Users",
-                table: "Users");
-
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_Authorizations",
-                table: "Authorizations");
-
-            migrationBuilder.RenameTable(
-                name: "Users",
-                newName: "User");
-
-            migrationBuilder.RenameTable(
-                name: "Authorizations",
-                newName: "Authorization");
-
-            migrationBuilder.RenameIndex(
-                name: "IX_Authorizations_UserId",
-                table: "Authorization",
-                newName: "IX_Authorization_UserId");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_User",
-                table: "User",
-                column: "Id");
-
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_Authorization",
-                table: "Authorization",
-                column: "Id");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Authorization_User_UserId",
-                table: "Authorization",
-                column: "UserId",
-                principalTable: "User",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
+                name: "Employees");
         }
     }
 }

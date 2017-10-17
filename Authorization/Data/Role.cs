@@ -9,24 +9,12 @@ namespace Authorization.Data
 {
     public class Role
     {
-        public Role()
-        {
-            RoleModules = new HashSet<RoleModule>();
-            Users = new HashSet<User>();
-        }
+
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
         public ICollection<RoleModule> RoleModules { get; set; }
         public ICollection<User> Users { get; set; }
 
-    }
-
-    public class RoleModule
-    {
-        public int IdRole { get; set; }
-        public Role Role { get; set; }
-        public int IdModule { get; set; }
-        public Module Module { get; set; }
     }
 }

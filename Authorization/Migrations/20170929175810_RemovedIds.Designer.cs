@@ -11,8 +11,8 @@ using System;
 namespace Authorization.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170919210752_ChangedRolemodel")]
-    partial class ChangedRolemodel
+    [Migration("20170929175810_RemovedIds")]
+    partial class RemovedIds
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -70,19 +70,13 @@ namespace Authorization.Migrations
 
                     b.Property<int?>("TeamId");
 
-                    b.Property<int?>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PhotoId");
 
                     b.HasIndex("PositionId");
 
-                    b.HasIndex("TeamId")
-                        .IsUnique()
-                        .HasFilter("[TeamId] IS NOT NULL");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("TeamId");
 
                     b.ToTable("Employees");
                 });
@@ -144,13 +138,18 @@ namespace Authorization.Migrations
 
             modelBuilder.Entity("Authorization.Data.RoleModule", b =>
                 {
-                    b.Property<int>("IdRole");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("IdModule");
+                    b.Property<int?>("ModuleId");
 
-                    b.HasKey("IdRole", "IdModule");
+                    b.Property<int?>("RoleId");
 
-                    b.HasIndex("IdModule");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("RoleModules");
                 });
@@ -162,11 +161,15 @@ namespace Authorization.Migrations
 
                     b.Property<int?>("DepartmentId");
 
+                    b.Property<int?>("EmployeeId");
+
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("Teams");
                 });
@@ -175,6 +178,8 @@ namespace Authorization.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("EmployeeId");
 
                     b.Property<bool>("IsActive");
 
@@ -189,6 +194,8 @@ namespace Authorization.Migrations
                     b.Property<int?>("RoleId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("RoleId");
 
@@ -213,18 +220,14 @@ namespace Authorization.Migrations
                         .HasForeignKey("PositionId");
 
                     b.HasOne("Authorization.Data.Team", "Team")
-                        .WithOne("Chief")
-                        .HasForeignKey("Authorization.Data.Employee", "TeamId");
-
-                    b.HasOne("Authorization.Data.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("TeamId");
                 });
 
             modelBuilder.Entity("Authorization.Data.Position", b =>
                 {
                     b.HasOne("Authorization.Data.Department", "Department")
-                        .WithMany()
+                        .WithMany("Positions")
                         .HasForeignKey("DepartmentId");
                 });
 
@@ -232,26 +235,32 @@ namespace Authorization.Migrations
                 {
                     b.HasOne("Authorization.Data.Module", "Module")
                         .WithMany("RoleModules")
-                        .HasForeignKey("IdModule")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ModuleId");
 
                     b.HasOne("Authorization.Data.Role", "Role")
                         .WithMany("RoleModules")
-                        .HasForeignKey("IdRole")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("Authorization.Data.Team", b =>
                 {
                     b.HasOne("Authorization.Data.Department", "Department")
-                        .WithMany()
+                        .WithMany("Teams")
                         .HasForeignKey("DepartmentId");
+
+                    b.HasOne("Authorization.Data.Employee", "Employee")
+                        .WithMany("Teams")
+                        .HasForeignKey("EmployeeId");
                 });
 
             modelBuilder.Entity("Authorization.Data.User", b =>
                 {
+                    b.HasOne("Authorization.Data.Employee", "Employee")
+                        .WithMany("Users")
+                        .HasForeignKey("EmployeeId");
+
                     b.HasOne("Authorization.Data.Role", "Role")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("RoleId");
                 });
 #pragma warning restore 612, 618

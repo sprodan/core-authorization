@@ -10,6 +10,7 @@ namespace Authorization.Data
         public Employee()
         {
             Teams = new HashSet<Team>();
+            Users = new HashSet<User>();
         }
         public int Id { get; set; }
         
