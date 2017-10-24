@@ -1,5 +1,5 @@
 ﻿<div class="row wrapper border-bottom white-bg page-heading">
-    <div class="col-sm-4">
+    <div class="col-sm-8">
         <h2>@Model.Title</h2>
         @if (Model.Breadcrumbs != null && Model.Breadcrumbs.Count > 0)
         {
@@ -24,9 +24,9 @@
             </ol>
         }
     </div>
-    @if (Model.ActionUrl != null)
+    @if (Model.ActionUrl != null && Model.ActionPermition)
     {
-        <div class="col-sm-8">
+        <div class="col-sm-4">
             <div class="title-action">
                 <a asp-page="@Model.ActionUrl" class="btn btn-primary">@Model.ActionTitle</a>
             </div>

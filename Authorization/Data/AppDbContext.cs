@@ -36,6 +36,7 @@ namespace Authorization.Data
             builder.Entity<Team>().HasOne(t => t.Department).WithMany(d => d.Teams);
             builder.Entity<Team>().HasOne(t => t.Employee).WithMany(e => e.Teams);
             base.OnModelCreating(builder);
+
         }
     }
 }

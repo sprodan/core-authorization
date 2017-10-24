@@ -16,7 +16,7 @@ namespace Authorization.Pages.Structure
 {
     public class GradesModel : BasePageModel
     {
-        public GradesModel(AppDbContext db) : base(db, "structureGrade")
+        public GradesModel(AppDbContext db) : base(db, "310")
         {
             this.Title = "Система грейдов";
             this.Breadcrumbs = new Queue<Breadcrumb>();
@@ -28,18 +28,51 @@ namespace Authorization.Pages.Structure
 
         [BindProperty]
         public List<Department> Departments { get; set; }
+        [BindProperty]
+        public bool ViewDepartmentsPermition { get; set; }
+        [BindProperty]
+        public bool EditDepartmentsPermition { get; set; }
 
         public async Task<IActionResult> OnGetAsync()
         {
+            if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
+            ViewDepartmentsPermition = CheckPermition(this.Request.Headers, "311");
+            EditDepartmentsPermition = CheckPermition(this.Request.Headers, "312");
             Departments = await _db.Departments.ToListAsync();
             //var positions = await _db.Positions.ToListAsync();
             if (Departments == null) return Page(); //Todo make empty field
             foreach (var d in Departments)
             {
-                var positions = await _db.Positions.Where(x => x.IdDepartment == d.Id).ToListAsync();
+                var positions = await _db.Positions.Where(x => x.Department.Id == d.Id).ToListAsync();
                 d.Positions = positions.OrderBy(x => x.Grade).ToList();
             }
             return Page();
+        }
+
+        public async Task<IActionResult> OnGetJsonAsync()
+        {
+            if (!base.CheckPermitions(this.Request.Headers))
+                return new JsonResult(new { Code = "403", Message = "Forbidden" });
+            var query = Request.QueryString;
+            var dict = query.ToString().DeserializeAjaxString();
+            if (dict.TryGetValue("departmentId", out string departmentId))
+            {
+                if (!string.IsNullOrWhiteSpace(departmentId))
+                {
+                    if (int.TryParse(departmentId, out int did))
+                    {
+                        await _db.Positions.ToListAsync();
+                        var department = await _db.Departments.FindAsync(did);
+                        return new JsonResult(new { Code = "200", Positions = department.Positions });
+                    }
+                }
+            }
+            else
+            {
+                var positions = await _db.Positions.ToListAsync();
+                return new JsonResult(new { Code = "200", Positions = positions });
+            }
+            return new JsonResult(new { Code = "500", Message = "WrongData" });
         }
 
         [AjaxOnly]

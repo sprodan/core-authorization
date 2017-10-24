@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System.Web;
+using Microsoft.AspNetCore.Http;
 
 namespace Authorization.Pages.Settings.RoleModel
 {
@@ -21,7 +22,7 @@ namespace Authorization.Pages.Settings.RoleModel
 		[BindProperty]
 		public IList<Role> Roles { get; set; }
 		public IList<Module> Modules { get; set; }
-		public Edit(AppDbContext db) : base(db, "editRole")
+		public Edit(AppDbContext db) : base(db, "211")
         {
             this.Title = "Изменение ролей";
             this.Breadcrumbs = new Queue<Breadcrumb>();
@@ -32,7 +33,8 @@ namespace Authorization.Pages.Settings.RoleModel
         }
 		public async Task<IActionResult> OnGetAsync()
 		{
-			Roles = await _db.Roles.AsNoTracking().ToListAsync();
+            if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
+            Roles = await _db.Roles.AsNoTracking().ToListAsync();
 			Modules = await _db.Modules.AsNoTracking().ToListAsync();
 			return Page();
 		}

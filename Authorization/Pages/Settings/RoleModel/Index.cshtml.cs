@@ -24,11 +24,12 @@ namespace Authorization.Pages.Settings.RoleModel
         public IList<Module> Modules { get; set; }
 
         public IList<RoleModule> RoleModules { get; set; }
-        public Index(AppDbContext db) : base(db, "role")
+        public Index(AppDbContext db) : base(db, "210")
         {
             this.Title = "Ролевая модель";
             this.ActionTitle = "Изменение ролей";
             this.ActionUrl = "/settings/rolemodel/edit";
+            this.ActionCode = "211";
 			this.Breadcrumbs = new Queue<Breadcrumb>();
 			Breadcrumbs.Enqueue(new Breadcrumb { Title = "Главная", NavigationUrl = "/" });
 			Breadcrumbs.Enqueue(new Breadcrumb { Title = "Настройки" });
@@ -37,6 +38,7 @@ namespace Authorization.Pages.Settings.RoleModel
 
         public async Task<IActionResult> OnGetAsync()
         {
+            if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
             Roles = await _db.Roles.ToListAsync();
             Modules = await _db.Modules.ToListAsync();
             RoleModules = await _db.RoleModules.ToListAsync();

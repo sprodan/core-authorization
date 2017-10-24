@@ -6654,28 +6654,53 @@ body.body-small .vote-icon {
     opacity: 1;
   }
 }
-/*
+
+.ibox-content > .sk-spinner {
+    display: none;
+}
+
+.ibox-content.sk-loading > .sk-spinner {
+    display: block;
+    position: absolute;
+    top: 40%;
+    left: 0;
+    right: 0;
+    z-index: 2000;
+}
+.ibox-content.sk-loading {
+    position: relative;
+}
+.ibox-content.sk-loading:after {
+        content: '';
+        background-color: rgba(255, 255, 255, 0.7);
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+    /*
  *
  *   INSPINIA Landing Page - Responsive Admin Theme
  *   Copyright 2014 Webapplayers.com
  *
 */
-/* GLOBAL STYLES
+    /* GLOBAL STYLES
 -------------------------------------------------- */
-/* PACE PLUGIN
+    /* PACE PLUGIN
 -------------------------------------------------- */
-.landing-page.pace .pace-progress {
-  background: #fff;
-  position: fixed;
-  z-index: 2000;
-  top: 0;
-  left: 0;
-  height: 2px;
-  -webkit-transition: width 1s;
-  -moz-transition: width 1s;
-  -o-transition: width 1s;
-  transition: width 1s;
-}
+    .landing-page.pace .pace-progress {
+        background: #fff;
+        position: fixed;
+        z-index: 2000;
+        top: 0;
+        left: 0;
+        height: 2px;
+        -webkit-transition: width 1s;
+        -moz-transition: width 1s;
+        -o-transition: width 1s;
+        transition: width 1s;
+    }
 .pace-inactive {
   display: none;
 }

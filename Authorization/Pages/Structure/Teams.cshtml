@@ -2,3 +2,449 @@
 @model Authorization.Pages.Structure.TeamsModel
 @{
 }
+
+
+<div class="row animated fadeInRightBig">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            @if (Model.EditDepartmentsPermition)
+            {
+                <div class="col-lg-12 p-md">
+                    <button class="btn btn-primary btn-lg" onclick="addDepartment()">Добавить отдел</button>
+                </div>
+            }
+            <div class="col-md-6 department" style="display: none;" id="box-department">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 id="box-department-name"></h5>
+                        @if (Model.EditDepartmentsPermition)
+                        {
+                            <a class="btn btn-xs btn-warning m-l-md" id="box-department-editbtn">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <a class="btn btn-xs btn-danger m-l-n-xxs" id="box-department-deletebtn">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        }
+                    </div>
+                    <div class="ibox-content">
+                        <form method="post">
+                            <table class="table" id="teamTable">
+                                <thead>
+                                    <tr>
+                                        <th>Название</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="display: none;">
+                                        <td id="teamName"></td>
+                                        @if (Model.EditDepartmentsPermition)
+                                        {
+                                            <td style="width: 25%">
+                                                <a class="btn btn-xs btn-danger pull-right" id="deleteButton" style="margin-left: 2px">
+                                                    <i class="fa fa-times"></i>
+                                                </a>
+                                                <a class="btn btn-xs btn-warning pull-right" id="editButton">
+                                                    <i class="fa fa-pencil"></i>
+                                                </a>
+                                            </td>
+                                        }
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                    @if (Model.EditDepartmentsPermition)
+                    {
+                        <div class="ibox-footer">
+                            <div class="text-center">
+                                <a class="btn btn-primary" id="box-department-addbtn">Добавить команду</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @foreach (var department in Model.Departments)
+            {
+                <div class="col-md-6 department" id="@department.Id">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5 id="box-department-name">@department.Name</h5>
+                            @if (Model.EditDepartmentsPermition)
+                            {
+                                <a class="btn btn-xs btn-warning m-l-md" id="editDepartmentButton" onclick="editDepartment(@department.Id, '@department.Name')">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a class="btn btn-xs btn-danger m-l-n-xxs" id="deleteDepartmentButton" onclick="deleteDepartment(@department.Id, '@department.Name')">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            }
+                        </div>
+                        <div class="ibox-content">
+                            <form method="post">
+                                <table class="table" id="teamTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Название</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="display: none;">
+                                            <td id="teamName"></td>
+                                            @if (Model.EditDepartmentsPermition)
+                                            {
+                                                <td style="width: 25%">
+                                                    <a class="btn btn-xs btn-danger pull-right" id="deleteButton" style="margin-left: 2px">
+                                                        <i class="fa fa-times"></i>
+                                                    </a>
+                                                    <a class="btn btn-xs btn-warning pull-right" id="editButton">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </a>
+                                                </td>
+                                            }
+                                        </tr>
+                                        @foreach (var team in department.Teams)
+                                        {
+                                            <tr id="@team.Id">
+                                                <td id="teamName">@team.Name</td>
+                                                @if (Model.EditDepartmentsPermition)
+                                                {
+                                                    <td style="width: 25%">
+                                                        <a class="btn btn-xs btn-danger pull-right" id="deleteButton" onclick="deleteTeam(@team.Id)" style="margin-left: 2px">
+                                                            <i class="fa fa-times"></i>
+                                                        </a>
+                                                        <a class="btn btn-xs btn-warning pull-right" id="editButton" onclick="editTeam(@team.Id, '@team.Name')">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </form>
+                        </div>
+                        @if (Model.EditDepartmentsPermition)
+                        {
+                            <div class="ibox-footer">
+                                <div class="text-center">
+                                    <a class="btn btn-primary" onclick="addTeam(@department.Id, '@department.Name')">Добавить команду</a>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            }
+            @if (Model.EditDepartmentsPermition)
+            {
+                <div id="adddepartment-modal" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h3 class="m-t-none m-b">Добавить отдел</h3>
+                                        <form role="form" id="addDepartment">
+                                            <div class="form-group"><label>Название</label> <input type="text" placeholder="Название" class="form-control" name="name"></div>
+                                            <div>
+                                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Добавить</strong></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="editdepartment-modal" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h3 class="m-t-none m-b">Изменить отдел</h3>
+                                        <form role="form" id="editDepartment">
+                                            <input type="hidden" id="id" name="id">
+                                            <div class="form-group"><label>Название</label> <input type="text" placeholder="Название" class="form-control" name="name" id="name"></div>
+                                            <div>
+                                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="deletedepartment-modal" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h3 class="m-t-none m-b">Удаление отдела</h3>
+                                        <h5 class="m-t-none m-b" id="name"></h5>
+                                        <form role="form" id="deleteDepartment">
+                                            <input type="hidden" id="id" name="id">
+                                            <div>
+                                                <button class="btn btn-sm btn-danger pull-right m-t-n-xs" type="submit"><strong>Подтвердить</strong></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="addteam-modal" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h3 class="m-t-none m-b">Добавить</h3>
+                                        <h4 class="m-t-none m-b" id="addModalDepartmentName"></h4>
+                                        <form role="form" id="addTeam">
+                                            <input type="hidden" name="departmentId" id="addModalDepartmentId" />
+                                            <div class="form-group"><label>Название</label> <input type="text" placeholder="Название" class="form-control" name="name"></div>
+                                            <div>
+                                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Добавить</strong></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="editteam-modal" class="modal fade" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <h3 class="m-t-none m-b">Изменить команду</h3>
+                                        <form role="form" id="editTeamForm">
+                                            <input type="hidden" name="id" id="editModalTeamId" />
+                                            <div class="form-group"><label>Название</label> <input type="text" id="editModalTeamName" placeholder="Название" class="form-control" name="name"></div>
+                                            <div>
+                                                <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    function addDepartment() {
+        $("#adddepartment-modal").modal("show");
+    }
+
+    function editDepartment(id, name) {
+        $("#editdepartment-modal #editDepartment #name").val(name);
+        $("#editdepartment-modal #editDepartment #id").val(id);
+        $("#editdepartment-modal").modal("show");
+    }
+
+    function deleteDepartment(id, name) {
+        $("#deletedepartment-modal #name").html(name);
+        $("#deletedepartment-modal #deleteDepartment #id").val(id);
+        $("#deletedepartment-modal").modal("show");
+    }
+
+    var editDepartmentForm = $("#editDepartment");
+    editDepartmentForm.on("submit", function (event) {
+        event.preventDefault();
+        var data = editDepartmentForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Structure/Grades?handler=editDepartment",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response) {
+                $('#editdepartment-modal').modal('hide');
+                switch (response.code) {
+                    case 200:
+                        $("div#" + response.department.id + ".department").find("#box-department-name").html(response.department.name);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    });
+
+    var deleteDepartmentForm = $("#deleteDepartment");
+    deleteDepartmentForm.on("submit", function (event) {
+        event.preventDefault();
+        var data = deleteDepartmentForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Structure/Grades?handler=deleteDepartment",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response) {
+                $('#deletedepartment-modal').modal('hide');
+                switch (response.code) {
+                    case 200:
+                        $("div#" + response.department.id + ".department").remove();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    });
+
+    var addDepartmentForm = $("#addDepartment");
+    addDepartmentForm.on("submit", function (event) {
+        event.preventDefault();
+        var data = addDepartmentForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Structure/Grades?handler=addDepartment",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response) {
+                $('#adddepartment-modal').modal('hide');
+                switch (response.code) {
+                    case 200:
+                        var box = $("#box-department");
+                        var clone = box.clone();
+                        clone.find("#box-department-name").html(response.department.name);
+                        clone.find("#box-department-addbtn").on("click", function (event) {
+                            addPosition(response.department.id, response.department.name)
+                        });
+                        clone.find("#box-department-editbtn").on("click", function (event) {
+                            editDepartment(response.department.id, response.department.name)
+                        });
+                        clone.find("#box-department-deletebtn").on("click", function (event) {
+                            deleteDepartment(response.department.id, response.department.name)
+                        });
+                        clone.removeAttr("style");
+                        clone.attr("id", response.department.id);
+                        box.after(clone);
+                    default:
+                        break;
+                }
+            }
+        });
+    });
+
+
+    function deleteTeam(id) {
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Structure/Teams?handler=deleteTeam",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: id },
+            success: function (response) {
+                switch (response.code) {
+                    case 200:
+                        var row = $("tr#" + response.team.id);
+                        row.remove();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+
+    var addForm = $("#addTeam");
+    addForm.on("submit", function (event) {
+        event.preventDefault();
+        var data = addForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Structure/Teams?handler=addTeam",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response) {
+                $('#addteam-modal').modal('hide');
+                var row;
+                switch (response.code) {
+                    case 200:
+                        var rows = $('div#' + response.team.idDepartment + ' table tbody tr');
+                        row = rows.last();
+                        break;
+                    default:
+                        break;
+                }
+                if (row != null) {
+                    $(row).after($(row).clone().attr("id", response.team.id));
+                    var newrow = $('tr#' + response.team.id);
+                    newrow.removeAttr("style");
+                    var columns = newrow.find("td");
+                    $(columns[0]).html(response.team.name);
+                    $(columns[1]).find("#deleteButton")
+                        .removeAttr("onclick")
+                        .on("click", function (e) {
+                            deleteTeam(response.team.id);
+                        });
+                    $(columns[1]).find("#editButton")
+                        .removeAttr("onclick")
+                        .on("click", function (e) {
+                            editTeam(response.team.id, response.team.name);
+                        });
+
+                }
+            }
+        });
+
+    });
+
+    var editForm = $("#editTeamForm");
+    editForm.on("submit", function (event) {
+        event.preventDefault();
+        var data = editForm.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Structure/Teams?handler=editTeam",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response) {
+                $('#editteam-modal').modal('hide');
+                switch (response.code) {
+                    case 200:
+                        var row = $("tr#" + response.team.id);
+                        var columns = row.find("td");
+                        $(columns[0]).html(response.team.name);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+    });
+
+
+    function addTeam(id, name) {
+        $("#addModalDepartmentId").val(id);
+        $("#addModalDepartmentName").html(name);
+        $('#addteam-modal').modal('show');
+    }
+
+    function editTeam(id, name) {
+        $("#editModalTeamId").val(id);
+        $("#editModalTeamName").val(name);
+        $("#editteam-modal").modal("show");
+    }
+
+</script>

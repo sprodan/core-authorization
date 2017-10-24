@@ -1,8 +1,10 @@
 ﻿using Authorization.Data;
 using Authorization.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +24,32 @@ namespace Authorization.Pages
         [BindProperty]
         public Queue<Breadcrumb> Breadcrumbs { get; set; }
         [BindProperty]
-        public string ModuleName { get; set; }
+        public string ModuleCode { get; set; }
+        protected string ActionCode { get; set; }
         [BindProperty]
-        public IEnumerable<string> CurrentUserPermitions { get; }
+        public bool ActionPermition { get; private set; }
+        public IEnumerable<string> Permitions { get; set; }
 
-
-        public BasePageModel(AppDbContext db, string moduleName)
+        public BasePageModel(AppDbContext db, string moduleCode)
         {
             _db = db;
-            ModuleName = moduleName;
-            //this.Request.Headers.TryGetValue("permitions", out StringValues permitions);
+            ModuleCode = moduleCode;
         }
+
+        protected bool CheckPermitions(IHeaderDictionary header)
+        {
+            this.Request.Headers.TryGetValue("permitions", out StringValues permitions);
+            Permitions = JsonConvert.DeserializeObject<IEnumerable<string>>(permitions);
+            ActionPermition = Permitions.Contains(ActionCode);
+            return Permitions.Contains(ModuleCode);
+        }
+        protected bool CheckPermition(IHeaderDictionary header, string code)
+        {
+            this.Request.Headers.TryGetValue("permitions", out StringValues permitions);
+            var permitionsList = JsonConvert.DeserializeObject<IEnumerable<string>>(permitions);
+            return permitionsList.Contains(code);
+        }
+
+
     }
 }

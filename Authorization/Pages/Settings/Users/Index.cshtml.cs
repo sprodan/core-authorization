@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Authorization.Models;
 using Authorization.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace Authorization.Pages.Settings.Users
 {
     public class IndexModel : BasePageModel
     {
-        public IndexModel(AppDbContext db) : base(db, "users")
+        public IndexModel(AppDbContext db) : base(db, "220")
         {
             this.Title = "Пользователи";
             this.Breadcrumbs = new Queue<Breadcrumb>();
@@ -25,6 +26,7 @@ namespace Authorization.Pages.Settings.Users
         public List<Role> Roles { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
+            if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
             Roles = await _db.Roles.ToListAsync();
             var users = await _db.Users.ToListAsync();
             var employees = await _db.Employees.ToListAsync();

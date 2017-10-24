@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Authorization.Models;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using System.Threading;
+using System.Diagnostics;
 
 namespace Authorization.Services
 {
@@ -40,13 +42,20 @@ namespace Authorization.Services
                 context.Response.Redirect("/Auth/Login");
                 return;
             }
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
             await db.Users.ToListAsync();
             await db.Roles.ToListAsync();
             await db.RoleModules.ToListAsync();
             await db.Modules.ToListAsync();
-
-            var permitions = auth.User.Role.RoleModules.Select(x => x.Module.Code);
-            context.Request.Headers.Add("permitions", (StringValues)JsonConvert.SerializeObject(permitions));
+            if(auth.User.Role != null)
+            {
+                var permitions = auth.User.Role.RoleModules.Select(x => x.Module.Code);
+                context.Request.Headers.Add("permitions", (StringValues)JsonConvert.SerializeObject(permitions));
+                
+            }
+            timer.Stop();
+            Debug.WriteLine($"tiMER:  {timer.ElapsedMilliseconds}");
             await _next.Invoke(context);
         }
     }

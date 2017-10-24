@@ -8,13 +8,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Authorization.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Authorization.Pages
 {
     public class IndexModel : BasePageModel 
     {
-        public IndexModel(AppDbContext db) : base(db, "main")
+        public IndexModel(AppDbContext db) : base(db, "100")
         {
+            var req = Request;
             this.Title = "Главная страница";
             this.ActionTitle = "Тест";
             this.ActionUrl = "/";
@@ -26,6 +28,7 @@ namespace Authorization.Pages
         
         public async Task<IActionResult> OnGetAsync()
         {
+            if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
             return Page();
         }
         

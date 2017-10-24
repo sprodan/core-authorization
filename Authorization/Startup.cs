@@ -22,8 +22,12 @@ namespace Authorization
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                              options.UseSqlServer(Configuration.GetConnectionString("LocalConnection")));
-            services.AddMvc();
+                              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                }); 
         }
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {

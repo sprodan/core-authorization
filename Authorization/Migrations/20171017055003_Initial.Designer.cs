@@ -11,8 +11,8 @@ using System;
 namespace Authorization.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20170929175810_RemovedIds")]
-    partial class RemovedIds
+    [Migration("20171017055003_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,6 +85,8 @@ namespace Authorization.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Code");
 
                     b.Property<string>("Name");
 
