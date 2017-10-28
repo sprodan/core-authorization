@@ -19,13 +19,15 @@ namespace Authorization.Pages.Settings.RoleModel
 {
     public class Index : BasePageModel
     {
+        private readonly Cache.Cache _cache;
         [BindProperty]
         public IList<Role> Roles { get; set; }
         public IList<Module> Modules { get; set; }
 
         public IList<RoleModule> RoleModules { get; set; }
-        public Index(AppDbContext db) : base(db, "210")
+        public Index(AppDbContext db, Cache.Cache cache) : base(db, "210")
         {
+            _cache = cache;
             this.Title = "Ролевая модель";
             this.ActionTitle = "Изменение ролей";
             this.ActionUrl = "/settings/rolemodel/edit";
@@ -82,7 +84,7 @@ namespace Authorization.Pages.Settings.RoleModel
                     {
                         Debug.WriteLine(e.Message);
                     }
-                    
+                    _cache.Clear();
                     return new JsonResult(new { Status = "OK", Code = 200 });
                 }
                 //if (!string.IsNullOrWhiteSpace(name))

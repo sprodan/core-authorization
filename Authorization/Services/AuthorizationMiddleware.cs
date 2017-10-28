@@ -35,8 +35,20 @@ namespace Authorization.Services
                 context.Response.Redirect("/Auth/Login");
                 return;
             }
-            var db = context.RequestServices.GetService<AppDbContext>();
-            var auth = await db.Authorizations.FirstOrDefaultAsync(x => x.Token == Guid.Parse(hash));
+            var cache = context.RequestServices.GetService<Cache.Cache>();
+            if (cache.Authorizations == null)
+            {
+                var db = context.RequestServices.GetService<AppDbContext>();
+                await db.Users.ToListAsync();
+                await db.Roles.ToListAsync();
+                await db.RoleModules.ToListAsync();
+                await db.Modules.ToListAsync();
+                cache.Authorizations = await db.Authorizations.ToListAsync();
+            }
+            //
+            //var auth = await db.Authorizations.FirstOrDefaultAsync(x => x.Token == Guid.Parse(hash));
+            var auth = cache.Authorizations.FirstOrDefault(x => x.Token == Guid.Parse(hash));
+
             if (auth == null)
             {
                 context.Response.Redirect("/Auth/Login");
@@ -44,10 +56,10 @@ namespace Authorization.Services
             }
             Stopwatch timer = new Stopwatch();
             timer.Start();
-            await db.Users.ToListAsync();
-            await db.Roles.ToListAsync();
-            await db.RoleModules.ToListAsync();
-            await db.Modules.ToListAsync();
+            //await db.Users.ToListAsync();
+            //await db.Roles.ToListAsync();
+            //await db.RoleModules.ToListAsync();
+            //await db.Modules.ToListAsync();
             if(auth.User.Role != null)
             {
                 var permitions = auth.User.Role.RoleModules.Select(x => x.Module.Code);
@@ -55,7 +67,7 @@ namespace Authorization.Services
                 
             }
             timer.Stop();
-            Debug.WriteLine($"tiMER:  {timer.ElapsedMilliseconds}");
+            Console.WriteLine($"Role-Modules timer:  {timer.ElapsedMilliseconds}");
             await _next.Invoke(context);
         }
     }

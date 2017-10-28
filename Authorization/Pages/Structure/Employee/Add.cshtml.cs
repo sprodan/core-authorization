@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Authorization.Models;
 using Microsoft.EntityFrameworkCore;
+using Authorization.Extentions;
 
 namespace Authorization.Pages.Structure.Employee
 {
@@ -23,7 +24,7 @@ namespace Authorization.Pages.Structure.Employee
 
         [BindProperty]
         public List<Department> Departments { get; set; }
-        
+
         public async Task<IActionResult> OnGetAsync()
         {
             if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
@@ -31,6 +32,12 @@ namespace Authorization.Pages.Structure.Employee
             await _db.Teams.ToListAsync();
             Departments = await _db.Departments.ToListAsync();
             return Page();
+        }
+
+        [AjaxOnly]
+        public async Task<IActionResult> OnPostAsync()
+        {
+            return null;
         }
     }
 }

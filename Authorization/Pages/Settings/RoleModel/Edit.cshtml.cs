@@ -22,8 +22,11 @@ namespace Authorization.Pages.Settings.RoleModel
 		[BindProperty]
 		public IList<Role> Roles { get; set; }
 		public IList<Module> Modules { get; set; }
-		public Edit(AppDbContext db) : base(db, "211")
+
+        private readonly Cache.Cache _cache;
+		public Edit(AppDbContext db, Cache.Cache cache) : base(db, "211")
         {
+            _cache = cache;
             this.Title = "Изменение ролей";
             this.Breadcrumbs = new Queue<Breadcrumb>();
             Breadcrumbs.Enqueue(new Breadcrumb { Title = "Главная", NavigationUrl = "/" });
@@ -52,7 +55,8 @@ namespace Authorization.Pages.Settings.RoleModel
 				{
 					var role = await _db.Roles.AddAsync(new Role() { Name = name });
 					await _db.SaveChangesAsync();
-					return new JsonResult(new { Status = "OK", Code = 200, Role = role.Entity });
+                    _cache.Clear();
+                    return new JsonResult(new { Status = "OK", Code = 200, Role = role.Entity });
 				}
 				return new JsonResult(data.ToString());
 			}
@@ -73,7 +77,8 @@ namespace Authorization.Pages.Settings.RoleModel
 						var role = await _db.Roles.FindAsync(intId);
 						_db.Roles.Remove(role);
 						await _db.SaveChangesAsync();
-						return new JsonResult(new { Status = "OK", Code = 200 });
+                        _cache.Clear();
+                        return new JsonResult(new { Status = "OK", Code = 200 });
 					}
 				}
 			}
@@ -96,7 +101,8 @@ namespace Authorization.Pages.Settings.RoleModel
 						role.Name = name;
 						_db.Attach(role).State = EntityState.Modified;
 						await _db.SaveChangesAsync();
-						return new JsonResult(new { Status = "OK", Code = 200, Role = role });
+                        _cache.Clear();
+                        return new JsonResult(new { Status = "OK", Code = 200, Role = role });
 					}
 				}
 			}
@@ -115,7 +121,8 @@ namespace Authorization.Pages.Settings.RoleModel
 				{
 					var module = await _db.Modules.AddAsync(new Module() { Name = name, Code = code });
 					await _db.SaveChangesAsync();
-					return new JsonResult(new { Status = "OK", Code = 200, Module = module.Entity });
+                    _cache.Clear();
+                    return new JsonResult(new { Status = "OK", Code = 200, Module = module.Entity });
 				}
 				return new JsonResult(data.ToString());
 			}
@@ -136,7 +143,8 @@ namespace Authorization.Pages.Settings.RoleModel
 						var module = await _db.Modules.FindAsync(intId);
 						_db.Modules.Remove(module);
 						await _db.SaveChangesAsync();
-						return new JsonResult(new { Status = "OK", Code = 200 });
+                        _cache.Clear();
+                        return new JsonResult(new { Status = "OK", Code = 200 });
 					}
 				}
 			}
@@ -164,6 +172,7 @@ namespace Authorization.Pages.Settings.RoleModel
                         module.Code = code;
                         _db.Attach(module).State = EntityState.Modified;
 						await _db.SaveChangesAsync();
+                        _cache.Clear();
 						return new JsonResult(new { Status = "OK", Code = 200, Module = module });
 					}
 				}
