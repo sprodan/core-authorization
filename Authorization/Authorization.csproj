@@ -15,7 +15,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\Settings\Users\" />
-    <Folder Include="Pages\Structure\Employee\" />
     <Folder Include="wwwroot\css\patterns\" />
   </ItemGroup>
 </Project>

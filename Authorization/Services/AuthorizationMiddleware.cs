@@ -39,37 +39,26 @@ namespace Authorization.Services
             if (cache.Authorizations == null)
             {
                 var db = context.RequestServices.GetService<AppDbContext>();
-                await db.Users.ToListAsync();
-                await db.Roles.ToListAsync();
-                await db.RoleModules.ToListAsync();
-                await db.Modules.ToListAsync();
-                cache.Authorizations = await db.Authorizations.ToListAsync();
+                await db.RoleModules.Include(rm => rm.Role).Include(rm => rm.Module).ToListAsync();
+                cache.Authorizations = await db.Authorizations.Include(x => x.User).ToListAsync();
             }
-            //
-            //var auth = await db.Authorizations.FirstOrDefaultAsync(x => x.Token == Guid.Parse(hash));
             var auth = cache.Authorizations.FirstOrDefault(x => x.Token == Guid.Parse(hash));
-
             if (auth == null)
             {
                 context.Response.Redirect("/Auth/Login");
                 return;
             }
-            Stopwatch timer = new Stopwatch();
+            var timer = new Stopwatch();
             timer.Start();
-            //await db.Users.ToListAsync();
-            //await db.Roles.ToListAsync();
-            //await db.RoleModules.ToListAsync();
-            //await db.Modules.ToListAsync();
-            if(auth.User.Role != null)
+
+            if (auth.User.Role != null)
             {
                 var permitions = auth.User.Role.RoleModules.Select(x => x.Module.Code);
                 context.Request.Headers.Add("permitions", (StringValues)JsonConvert.SerializeObject(permitions));
-                
             }
             timer.Stop();
             Console.WriteLine($"Role-Modules timer:  {timer.ElapsedMilliseconds}");
             await _next.Invoke(context);
         }
     }
-
 }

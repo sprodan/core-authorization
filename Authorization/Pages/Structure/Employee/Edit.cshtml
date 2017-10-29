@@ -1,8 +1,8 @@
 ﻿@page
-@model Authorization.Pages.Structure.Employee.AddModel
+@using Authorization.Data
+@model global::Authorization.Pages.Structure.Employee.EditModel
 @{
 }
-
 
 <div class="row animated fadeInRightBig">
     <div class="col-lg-12">
@@ -11,22 +11,24 @@
                 <div class="ibox-title">
                     Введите данные сотрудника
                 </div>
-                <div class="ibox-content" >
+                <div class="ibox-content">
                     <div class="sk-spinner sk-spinner-wave">
-                              <div class="sk-rect1"></div>
-                              <div class="sk-rect2"></div>
-                              <div class="sk-rect3"></div>
-                              <div class="sk-rect4"></div>
-                              <div class="sk-rect5"></div>
-                        
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+
                     </div>
-                    <form id="add-form" method="post" enctype="multipart/form-data">
+                    <form id="edit-form" method="post" enctype="multipart/form-data">
                         @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Employee.Id">
                         <div class="form-group row">
                             <div class="col-sm-2">
                                 <label>Имя<span style="color: red">*</span></label>
                             </div>
-                            <div class="col-sm-10"><input type="text" name="name" class="form-control" placeholder="Иванов" required="">
+                            <div class="col-sm-10">
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Иванов" required="" value="@Model.Employee.Name">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -34,7 +36,7 @@
                                 <label>Фамилия<span style="color: red">*</span></label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" name="surname" class="form-control" placeholder="Иван" required="">
+                                <input type="text" id="surname" name="surname" class="form-control" placeholder="Иван" required="" value="@Model.Employee.Surname">
                             </div>
                         </div>
                         <div class="form-group row">
@@ -42,59 +44,68 @@
                                 <label>Отчество</label>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" name="patronymic" class="form-control" placeholder="Иванович">
+                                <input type="text" id="patronymic" name="patronymic" class="form-control" placeholder="Иванович" >
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-2"><label>Отдел<span style="color: red">*</span></label>
+                            <div class="col-sm-2">
+                                <label>Отдел<span style="color: red">*</span></label>
                             </div>
                             <div class="col-sm-10" id="department-select-box">
-
                                 <select name="departmentId" id="department-select" class="form-control">
                                     @foreach (var department in Model.Departments)
                                     {
-                                        <option value="@department.Id">@department.Name</option>
+                                        if (department.Id == Model.Employee.Position.Department.Id)
+                                        {
+                                             <option selected="selected" value="@department.Id">@department.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@department.Id">@department.Name</option>
+                                        }
                                     }
                                 </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-2"><label>Позиция<span style="color: red">*</span></label>
+                            <div class="col-sm-2">
+                                <label>Позиция<span style="color: red">*</span></label>
                             </div>
                             <div class="col-sm-10">
 
                                 <select name="positionId" id="position-select" class="form-control">
-                                    @foreach (var position in Model.Departments[0].Positions)
+                                    @foreach (var position in Model.Employee.Position.Department.Positions)
                                     {
-                                        <option value="@position.Id">@position.Name</option>
+                                        if (position.Id == Model.Employee.Position.Id)
+                                        {
+                                            <option selected="selected" value="@position.Id">@position.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@position.Id">@position.Name</option>
+                                        }
                                     }
                                 </select>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-sm-2"><label>Команда<span style="color: red">*</span></label>
+                            <div class="col-sm-2">
+                                <label>Команда<span style="color: red">*</span></label>
                             </div>
                             <div class="col-sm-10">
                                 <select name="teamId" id="team-select" class="form-control">
-                                    @foreach (var team in Model.Departments[0].Teams)
+                                    @foreach (var team in Model.Employee.Team.Department.Teams)
                                     {
-                                        <option value="@team.Id">@team.Name</option>
+                                        if (team.Id == Model.Employee.Team.Id)
+                                        {
+                                            <option selected="selected" value="@team.Id">@team.Name</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@team.Id">@team.Name</option>
+                                        }
                                     }
                                 </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-2"><label>Фото<span style="color: red">*</span></label>
-                            </div>
-                            <div class="col-sm-10">
-                                <div class="fileinput fileinput-new" data-provides="fileinput">
-                                    <span class="btn btn-default btn-file">
-                                        <span class="fileinput-new">Выбрать файл</span>
-                                        <span class="fileinput-exists">Изменить</span><input type="file" id="input-avatar" name="avatar" accept="image/*"/>
-                                    </span>
-                                    <img id="preview-image" width="50" height="50" class="image img-circle"/>
-                                    <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">×</a>
-                                </div>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary block full-width m-b">Сохранить</button>
@@ -104,47 +115,34 @@
         </div>
     </div>
 </div>
+
 <script>
-    var form = $("#add-form");
-    form.on("submit", function (e) {
-        e.preventDefault();
-        $(".ibox-content").toggleClass('sk-loading');
-
-        var data = new FormData(form.serialize());
-
-        var fileUpload = $("#input-avatar").get(0).files[0];
-        data.append(fileUpload.name, fileUpload);
-        
-        data.append("__RequestVerificationToken", $('[name=__RequestVerificationToken]').val());
-        data.append("name", $('[name=name]').val());
-        data.append("surname", $('[name=surname]').val());
-        data.append("patronymic", $('[name=patronymic]').val());
-        data.append("positionId", $('[name=positionId]').val());
-        data.append("teamId", $('[name=teamId]').val());
-
-
-        $.ajax({
-            url: "/Structure/Employee/Add",
-            type: 'POST',
-            contentType: false,
-            processData: false,
-            data: data,
-            success: function (response) {
-                
-                switch (response.code) {
-                case 200:
-                    alert("Добавлено");
-                    break;
-                default:
-                    break;
-                }
-            },
-            
-        }).always(function()
-        {
+    var form = $("#edit-form");
+    form.on("submit",
+        function (event) {
             $(".ibox-content").toggleClass('sk-loading');
+            event.preventDefault();
+            var data = form.serialize();
+            var token = $('[name=__RequestVerificationToken]').val();
+            $.ajax({
+                url: "/Structure/Employee/Edit",
+                type: 'POST',
+                dataType: "json",
+                data: { __RequestVerificationToken: token, jsonRequest: data },
+                success: function (response) {
+                    switch (response.code) {
+                    case 200:
+                            
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }).always(function() {
+                $(".ibox-content").toggleClass('sk-loading');
+            });
         });
-    });
+    
 
 
 
@@ -153,7 +151,7 @@
     /**
      *
     VISUAL ASSETS
-     * 
+     *
      */
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -223,6 +221,6 @@
                 }
             }
         });
-        
+
     });
 </script>

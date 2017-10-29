@@ -38,14 +38,12 @@ namespace Authorization.Pages.Structure
             if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
             ViewDepartmentsPermition = CheckPermition(this.Request.Headers, "311");
             EditDepartmentsPermition = CheckPermition(this.Request.Headers, "312");
-            Departments = await _db.Departments.ToListAsync();
-            //var positions = await _db.Positions.ToListAsync();
+            Departments = await _db.Departments.Include(d => d.Positions).ToListAsync();
             if (Departments == null) return Page(); //Todo make empty field
-            foreach (var d in Departments)
+            Departments.ForEach(x =>
             {
-                var positions = await _db.Positions.Where(x => x.Department.Id == d.Id).ToListAsync();
-                d.Positions = positions.OrderBy(x => x.Grade).ToList();
-            }
+                x.Positions = x.Positions.OrderBy(p => p.Grade).ToList();
+            });
             return Page();
         }
 

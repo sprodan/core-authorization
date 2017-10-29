@@ -2,7 +2,7 @@
 @model Authorization.Pages.Structure.Employee.IndexModel
 @{
 }
-
+@Html.AntiForgeryToken()
 <div class="row animated fadeInRightBig">
     <div class="col-lg-12">
         <div class="wrapper wrapper-content">
@@ -11,51 +11,59 @@
                     Сотрудники
                 </div>
                 <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+                        
+                    </div>
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
-                                <tr>
-                                    <th>Фото</th>
-                                    <th>ФИО</th>
-                                    <th>Отдел</th>
-                                    <th>Грейд</th>
-                                    <th>Позиция</th>
-                                    <th>Команда</th>
-                                </tr>
+                            <tr>
+                                <th>Фото</th>
+                                <th>ФИО</th>
+                                <th>Отдел</th>
+                                <th>Грейд</th>
+                                <th>Позиция</th>
+                                <th>Команда</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                @foreach(var employee in Model.Employees)
-                                {
-                                    <tr>
-                                        <td>
-                                            <img class="image img-circle img-sm" src="~/images/a1.jpg">
-                                        </td>
-                                        <td>
-                                            @employee.Name @employee.Surname
-                                        </td>
-                                        <td>
-                                           @employee.Position?.Department?.Name
-                                        </td>
-                                        <td>
-                                            @employee.Position?.Grade
-                                        </td>
-                                        <td>
-                                            @employee.Position?.Name
-                                        </td>
-                                        <td>
-                                            @employee.Team?.Name
-                                        </td>
-                                        <td style="width: 25%">
-                                            <a class="btn btn-xs btn-danger pull-right" id="deleteButton" style="margin-left: 2px">
-                                                <i class="fa fa-times"></i>
-                                            </a>
-                                            <a class="btn btn-xs btn-warning pull-right" id="editButton">
-                                                <i class="fa fa-pencil"></i>
-                                            </a>
-                                        </td>
-                                        
-                                    </tr>
-                                }
+                            @foreach (var employee in Model.Employees)
+                            {
+                                <tr id="@employee.Id">
+                                    <td>
+                                        <img class="image img-circle img-md" src="@employee.Photo?.Url">
+                                    </td>
+                                    <td>
+                                        @employee.Name @employee.Surname
+                                    </td>
+                                    <td>
+                                        @employee.Position?.Department?.Name
+                                    </td>
+                                    <td>
+                                        @employee.Position?.Grade
+                                    </td>
+                                    <td>
+                                        @employee.Position?.Name
+                                    </td>
+                                    <td>
+                                        @employee.Team?.Name
+                                    </td>
+                                    <td style="width: 25%">
+                                        <a class="btn btn-xs btn-danger pull-right" id="deleteButton" style="margin-left: 2px" onclick="deleteEmployee(@employee.Id)">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                        <a class="btn btn-xs btn-warning pull-right" id="editButton" onclick="editEmployee(@employee.Id)">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            }
                             </tbody>
                         </table>
                     </div>
@@ -64,4 +72,73 @@
         </div>
     </div>
 </div>
+
+<div id="deleteemployee-modal" class="modal fade" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3 class="m-t-none m-b">Вы уверены? Действие невозможно будет отменить</h3>
+                        <div class="pull-right block">
+                            <button class="btn btn-default" onclick="modalCancel()">Отмена</button>
+                            <button class="btn btn-danger" id="confirm">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    function editEmployee(id) {
+        $(location).attr('href', '/Structure/Employee/Edit?' + id);
+    }
+
+    function deleteEmployee(id) {
+        $("#deleteemployee-modal").modal("show");
+        var confirmButton = $("#deleteemployee-modal #confirm");
+        confirmButton.off();
+        confirmButton.on("click",
+            function() {
+                deleteEmployeePost(id);
+            });
+    }
+    
+
+    function deleteEmployeePost(id) {
+        $(".ibox-content").toggleClass('sk-loading');
+        $("#deleteemployee-modal").modal("hide");
+        var data = id;
+        var token = $('[name=__RequestVerificationToken]').val();
+        $.ajax({
+            url: "/Structure/Employee/Index?handler=delete",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response) {
+                switch (response.code) {
+                case 200:
+                    $("tr#" + response.employee.id).remove();
+                    break;
+                default:
+                    break;
+                }
+            }
+        }).always(function () {
+            $(".ibox-content").toggleClass('sk-loading');
+        });
+
+    }
+
+    function modalCancel() {
+        $("#deleteemployee-modal").modal("hide");
+    }
+
+</script>
 
