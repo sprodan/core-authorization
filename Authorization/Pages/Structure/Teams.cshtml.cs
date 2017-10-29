@@ -108,7 +108,7 @@ namespace Authorization.Pages.Structure
                         var department = await _db.Departments.FindAsync(did);
                         var team = await _db.Teams.AddAsync(new Team() { Name = name, Department = department});
                         await _db.SaveChangesAsync();
-                        return new JsonResult(new { Status = "OK", Code = 200, Position = team.Entity });
+                        return new JsonResult(new { Status = "OK", Code = 200, Team = team.Entity });
                     }
                 }
             }

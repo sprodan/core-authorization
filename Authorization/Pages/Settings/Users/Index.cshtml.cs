@@ -28,23 +28,26 @@ namespace Authorization.Pages.Settings.Users
         {
             if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
             Roles = await _db.Roles.ToListAsync();
-            var users = await _db.Users.ToListAsync();
             var employees = await _db.Employees.ToListAsync();
+            var users = await _db.Users.ToListAsync();
             Users = new List<Models.User>();
             foreach(var user in users)
             {
                 var isOnline = false;
                 var role = await _db.Roles.FindAsync(user.Role.Id);
-
-                var employee = employees.Find(x => x.Id == user.Employee.Id);
-                Users.Add(new Models.User()
+                var userModel = new Models.User()
                 {
                     Id = user.Id,
                     Login = user.Login,
-                    Name = employee?.Name,
                     Role = role,
                     IsOnline = isOnline //TODO: calculateOnline
-                });
+                };
+                if (user.Employee != null)
+                {
+                    var employee = employees.Find(x => x.Id == user.Employee.Id);
+                    userModel.Name = employee?.Name;
+                }
+                Users.Add(userModel);
             }
             return Page();
         }
