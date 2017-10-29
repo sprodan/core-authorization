@@ -380,7 +380,7 @@
                 var row;
                 switch (response.code) {
                     case 200:
-                        var rows = $('div#' + response.team.idDepartment + ' table tbody tr');
+                        var rows = $('div#' + response.team.department.id + ' table tbody tr');
                         row = rows.last();
                         break;
                     default:
