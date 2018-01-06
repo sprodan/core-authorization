@@ -36,7 +36,11 @@
                             {
                                 <tr id="@employee.Id">
                                     <td>
-                                        <img class="image img-circle img-md" src="@employee.Photo?.Url">
+                                        @{
+                                            var imageUrl = @employee.Photo?.Url.Replace('\\','/');
+                                         }
+                                        <div class="image img-circle img-md" style="background-image: url(@imageUrl); background-position: center center; background-size: cover;">
+                                        </div>
                                     </td>
                                     <td>
                                         @employee.Name @employee.Surname

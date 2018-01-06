@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,11 +17,11 @@ namespace Authorization.Pages.Structure.Employee
     {
         public EditModel(AppDbContext db) : base(db, "332")
         {
-            this.Title = "Изменить сотрудника";
+            this.Title = "РР·РјРµРЅРёС‚СЊ СЃРѕС‚СЂСѓРґРЅРёРєР°";
             this.Breadcrumbs = new Queue<Breadcrumb>();
-            Breadcrumbs.Enqueue(new Breadcrumb { Title = "Главная", NavigationUrl = "/" });
-            Breadcrumbs.Enqueue(new Breadcrumb { Title = "Сотрудники", NavigationUrl = "/structure/employee" });
-            Breadcrumbs.Enqueue(new Breadcrumb { Title = "Изменить", NavigationUrl = "/structure/employee/edit" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "Р“Р»Р°РІРЅР°СЏ", NavigationUrl = "/" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "РЎРѕС‚СЂСѓРґРЅРёРєРё", NavigationUrl = "/structure/employee" });
+            Breadcrumbs.Enqueue(new Breadcrumb { Title = "РР·РјРµРЅРёС‚СЊ", NavigationUrl = "/structure/employee/edit" });
         }
 
         [BindProperty]

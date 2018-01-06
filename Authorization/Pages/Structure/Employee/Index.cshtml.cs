@@ -26,21 +26,15 @@ namespace Authorization.Pages.Structure.Employee
         }
 
         [BindProperty]
-        public List<Department> Departments { get; set; }
-        [BindProperty]
-        public List<Position> Positions { get; set; }
-        [BindProperty]
-        public List<Team> Teams { get; set; }
-        [BindProperty]
         public List<Data.Employee> Employees { get; set; }
         public async Task<IActionResult> OnGetAsync()
         {
             if (!base.CheckPermitions(this.Request.Headers)) return Redirect("/error");
-            Positions = await _db.Positions.ToListAsync();
-            Teams = await _db.Teams.ToListAsync();
-            Departments = await _db.Departments.ToListAsync();
             await _db.Photos.ToListAsync();
-            Employees = await _db.Employees.Include(e => e.Photo).ToListAsync();
+            Employees = await _db.Employees.Include(e => e.Photo)
+                                            .Include(e => e.Team)
+                                            .Include(e => e.Position)
+                                            .ToListAsync();
             return Page();
         }
 
