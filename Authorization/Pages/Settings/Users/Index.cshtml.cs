@@ -45,7 +45,7 @@ namespace Authorization.Pages.Settings.Users
                 if (user.Employee != null)
                 {
                     var employee = employees.Find(x => x.Id == user.Employee.Id);
-                    userModel.Name = employee?.Name;
+                    userModel.Name = $"{employee?.Name} {employee?.Surname}";
                 }
                 Users.Add(userModel);
             }

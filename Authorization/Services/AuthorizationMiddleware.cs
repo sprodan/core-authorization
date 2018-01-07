@@ -25,6 +25,8 @@ namespace Authorization.Services
 
         public async Task Invoke(HttpContext context)
         {
+            var timer = new Stopwatch();
+            timer.Start();
             if (context.Request.Path == "/Auth/Login")
             {
                 await _next.Invoke(context);
@@ -48,8 +50,7 @@ namespace Authorization.Services
                 context.Response.Redirect("/Auth/Login");
                 return;
             }
-            var timer = new Stopwatch();
-            timer.Start();
+            
 
             if (auth.User.Role != null)
             {
