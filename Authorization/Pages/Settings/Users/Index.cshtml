@@ -33,7 +33,7 @@
                                                 </a>
                                             </td>
                                             <td>@user.Name</td>
-                                            <td>@user.Role.Name
+                                            <td>@user.Role?.Name
                                                 <a class="btn btn-xs btn-warning pull-right" onclick="updateRole(@user.Id)" style="margin-left: 2px">
                                                     <i class="fa fa-pencil"></i>
                                                 </a>
@@ -58,10 +58,12 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <h3 class="m-t-none m-b">Обновить пароль?</h3>
-                                                <div>
-                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Отмена</strong></button>
-                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Подтвердить</strong></button>
-                                                </div>
+                                                <form role="form" id="updatePasswordForm">
+                                                    <div>
+                                                        <button class="btn btn-sm btn-danger pull-right m-t-n-xs m-l-xs"><strong>Подтвердить</strong></button>
+                                                        <button type="button" class="btn btn-sm btn-default pull-right m-t-n-xs" onclick="cancel()"><strong>Отмена</strong></button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -89,7 +91,8 @@
                                                         </select>
                                                     </div>
                                                     <div>
-                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs" type="submit"><strong>Изменить</strong></button>
+                                                        <button class="btn btn-sm btn-primary pull-right m-t-n-xs m-l-xs" type="submit"><strong>Изменить</strong></button>
+                                                        <button type="button" class="btn btn-sm btn-default pull-right m-t-n-xs" onclick="cancel()"><strong>Отмена</strong></button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -105,10 +108,13 @@
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <h3 class="m-t-none m-b">Заблокировать пользователя?</h3>
-                                                <div>
-                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Отмена</strong></button>
-                                                    <button class="btn btn-sm btn-primary pull-right m-t-n-xs"><strong>Подтвердить</strong></button>
-                                                </div>
+                                                <form class="form-group" id="blockUserForm">
+                                                    <input type="hidden" id="id_user" />
+                                                    <div>
+                                                        <button class="btn btn-sm btn-danger pull-right m-t-n-xs m-l-xs"><strong>Подтвердить</strong></button>
+                                                        <button type="button" class="btn btn-sm btn-default pull-right m-t-n-xs" onclick="cancel()"><strong>Отмена</strong></button>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -121,3 +127,45 @@
         </div>
     </div>
 </div>
+<script>
+    var updatePasswordForm = $("#updatePasswordForm");
+    var editRoleForm = $("#editRoleForm");
+    var blockUserForm = $("#blockUserForm");
+
+    updatePasswordForm.on("submit", function (e) {
+        e.preventDefault();
+        alert("Пока не работает");
+        $("#updatePassword-modal").modal("hide");
+    });
+
+    editRoleForm.on("submit", function (e) {
+        e.preventDefault();
+        var data = editRoleForm.serialize();
+        $("#editRole-modal").modal("hide");
+    });
+
+    blockUserForm.on("submit", function (e) {
+        e.preventDefault();
+        var data = blockUserForm.serialize();
+
+        $("#blockUser-modal").modal("hide");
+    });
+
+    function updatePassword(id) {
+        $("#updatePassword-modal").modal("show");
+    }
+
+    function updateRole(id) {
+        $("#editRole-modal").modal("show");
+    }
+
+    function blockUser(id) {
+        $("#blockUser-modal").modal("show");
+    }
+
+    function cancel() {
+        $("#updatePassword-modal").modal("hide");
+        $("#editRole-modal").modal("hide");
+        $("#blockUser-modal").modal("hide");
+    }
+</script>

@@ -2,3 +2,110 @@
 @model Authorization.Pages.Settings.Users.AddModel
 @{
 }
+
+<link href="~/lib_bower/select2/dist/css/select2.css" rel="stylesheet" />
+<script src="~/lib_bower/select2/dist/js/select2.js"></script>
+<div class="row animated fadeInRightBig">
+    <div class="col-lg-12">
+        <div class="wrapper wrapper-content">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    Введите данные сотрудника
+                </div>
+                <div class="ibox-content">
+                    <div class="sk-spinner sk-spinner-wave">
+                        <div class="sk-rect1"></div>
+                        <div class="sk-rect2"></div>
+                        <div class="sk-rect3"></div>
+                        <div class="sk-rect4"></div>
+                        <div class="sk-rect5"></div>
+
+                    </div>
+                    <form id="add-form" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <label>Login<span style="color: red">*</span></label>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="text" name="login" class="form-control" placeholder="login" required="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <label>Password<span style="color: red">*</span></label>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="password" name="password" class="form-control" placeholder="password" required="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <label>Роль<span style="color: red">*</span></label>
+                            </div>
+                            <div class="col-sm-10" id="department-select-box">
+
+                                <select name="roleId" id="role-select" class="form-control">
+                                    @foreach (var role in Model.Roles)
+                                    {
+                                        <option value="@role.Id">@role.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-2">
+                                <label>Сотрудник<span style="color: red">*</span></label>
+                            </div>
+                            <div class="col-sm-10">
+
+                                <select name="employeeId" id="employee-select" class="form-control">
+                                    @foreach (var employee in Model.Employees)
+                                    {
+                                        <option value="@employee.Id">@employee.Name @employee.Surname</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary block full-width m-b">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#employee-select').select2();
+    });
+
+
+    var form = $("#add-form");
+    form.on("submit", function (e) {
+        e.preventDefault();
+        $(".ibox-content").toggleClass('sk-loading');
+
+        var data = form.serialize();
+        var token = $('[name=__RequestVerificationToken]').val();
+        
+        $.ajax({
+            url: "/Settings/Users/Add",
+            type: 'POST',
+            dataType: "json",
+            data: { __RequestVerificationToken: token, jsonRequest: data },
+            success: function (response) {
+                switch (response.code) {
+                    case 200:
+                        alert("Добавлено");
+                        break;
+                    default:
+                        break;
+                }
+            },
+
+        }).always(function () {
+            $(".ibox-content").toggleClass('sk-loading');
+        });
+    });
+</script>

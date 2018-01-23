@@ -123,9 +123,10 @@
   width: 1px; }
 
 .select2-container--default .select2-selection--single {
-  background-color: #fff;
-  border: 1px solid #aaa;
-  border-radius: 4px; }
+    background-color: #fff;
+    border: 1px solid #e5e6e7;
+    /*border-radius: 4px;*/
+}
   .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: #444;
     line-height: 28px; }

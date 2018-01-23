@@ -16,35 +16,40 @@
                             <thead>
                                 <tr>
                                     <th>роли/модули</th>
-                                    @foreach(var module in Model.Modules)
+                                    @foreach(var role in Model.Roles)
 								{
-                                        <th>@module.Name</th>
+                                        <th class="text-center">@role.Name</th>
 								}
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach(var role in Model.Roles)
-    						{
+                                @foreach(var module in Model.Modules)
+    						    {
                                     <tr>
                                         <td>
-                                            @role.Name
+                                            @module.Name
                                         </td>
-                                        @foreach(var module in Model.Modules)
-								    {
-                                            <td>
-                                                @if (Model.RoleModules.Where(x => x.Module?.Id == module.Id && x.Role?.Id == role.Id).Count() > 0)
+                                        @foreach(var role in Model.Roles)
+								        {
+                                        <td>
+                                            @if (Model.RoleModules.Where(x => x.Module?.Id == module.Id && x.Role?.Id == role.Id).Count() > 0)
                                             {
-                                                    <input type="checkbox" checked data-idrole="@role.Id" data-idmodule="@module.Id" class="rolemodelcheck" />
+                                                <div class="checkbox checkbox-warning text-center">
+                                                    <input type="checkbox" checked data-idrole="@role.Id" data-idmodule="@module.Id" class="rolemodelcheck">
+                                                    <label/>
+                                                </div>
                                             }
                                             else
                                             {
-                                                    <input type="checkbox" data-idrole="@role.Id" data-idmodule="@module.Id" class="rolemodelcheck" />
-
+                                                <div class="checkbox checkbox-warning text-center">
+                                                    <input type="checkbox" data-idrole="@role.Id" data-idmodule="@module.Id" class="rolemodelcheck">
+                                                    <label />
+                                                </div>
                                             }
-                                            </td>
-								    }
+                                        </td>
+								        }
                                     </tr>
-    						}
+    						    }
                             </tbody>
                         </table>
                     </div>
